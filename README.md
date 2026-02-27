@@ -4,6 +4,7 @@ This repository contains AI personas designed to help you operate as a Senior â†
 
 Use these personas intentionally depending on the scope of the problem you are solving.
 
+
 ---
 
 ## ðŸŽ¯ When to Use Each Persona
