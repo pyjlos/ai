@@ -1,0 +1,27 @@
+{
+  "name": "senior-engineer",
+  "description": "Pragmatic implementation partner for feature development, debugging, refactoring, and testing",
+  "tools": [
+    "*"
+  ],
+  "allowedTools": [
+    "fs_read",
+    "fs_write",
+    "execute_bash",
+    "report_issues"
+  ],
+  "resources": [
+    "file://~/.aws/amazonq/personas/shared-context.md",
+    "file://~/.aws/amazonq/personas/senior-engineer-prompt.md"
+  ],
+  "hooks": {
+    "agentSpawn": [
+      {
+        "command": "git status"
+      },
+      {
+        "command": "git branch --show-current"
+      }
+    ]
+  }
+}

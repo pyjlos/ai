@@ -1,0 +1,22 @@
+{
+  "name": "principal-engineer",
+  "description": "Architectural oversight, deep code review, engineering standards, and cross-cutting technical decisions",
+
+  "tools": ["*"],
+  "allowedTools": [
+    "fs_read",
+    "report_issues"
+  ],
+
+  "resources": [
+    "file://~/.aws/amazonq/personas/shared-context.md",
+    "file://~/.aws/amazonq/personas/principal-engineer-prompt.md"
+  ],
+
+  "hooks": {
+    "agentSpawn": [
+      { "command": "git log --oneline -10" },
+      { "command": "git diff HEAD~1 --stat" }
+    ]
+  }
+}

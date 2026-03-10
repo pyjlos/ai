@@ -1,0 +1,23 @@
+{
+  "name": "cloud-architect",
+  "description": "AWS infrastructure design, IaC review, security posture, cost optimization, and Well-Architected alignment",
+
+  "tools": ["*"],
+  "allowedTools": [
+    "fs_read",
+    "use_aws",
+    "report_issues"
+  ],
+
+  "resources": [
+    "file://~/.aws/amazonq/personas/shared-context.md",
+    "file://~/.aws/amazonq/personas/cloud-architect-prompt.md"
+  ],
+
+  "hooks": {
+    "agentSpawn": [
+      { "command": "aws sts get-caller-identity" },
+      { "command": "aws configure list" }
+    ]
+  }
+}
