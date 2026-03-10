@@ -1,6 +1,6 @@
 # Shared Team Context
 
-> This file is injected into every Q Developer agent session.
+> This file is injected into every Kiro CLI agent session.
 > Edit it to reflect your team's actual stack, standards, and conventions.
 
 ## Team & Project

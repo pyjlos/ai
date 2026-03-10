@@ -11,8 +11,8 @@
     "report_issues"
   ],
   "resources": [
-    "file://~/.aws/amazonq/personas/shared-context.md",
-    "file://~/.aws/amazonq/personas/senior-engineer-prompt.md"
+    "file://~/.kiro/context/SHARED_CONTEXT.md",
+    "file://~/.kiro/context/SENIOR_ENGINEER.md"
   ],
   "hooks": {
     "agentSpawn": [

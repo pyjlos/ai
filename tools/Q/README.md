@@ -1,46 +1,35 @@
-# Amazon Q Developer — Getting Started Guide
+# Kiro CLI — Getting Started Guide
 
-> **Amazon Q Developer** is AWS's AI-powered coding assistant. It lives in your IDE, terminal, and AWS Console — helping you write code, debug, explain AWS services, scan for vulnerabilities, and work across your entire AWS environment.
+> **Kiro CLI** is an AI-powered command-line coding assistant powered by Claude. It lives in your terminal, helping you write code, debug, understand your codebase, and automate workflows through interactive chat and custom agents.
 
 ---
 
 ## Table of Contents
 
-1. [What is Amazon Q Developer?](#what-is-amazon-q-developer)
+1. [What is Kiro CLI?](#what-is-kiro-cli)
 2. [Prerequisites](#prerequisites)
-3. [Installation by IDE](#installation-by-ide)
-   - [VS Code](#vs-code)
-   - [JetBrains IDEs](#jetbrains-ides)
-   - [CLI / Terminal](#cli--terminal)
+3. [Installation](#installation)
 4. [Authentication](#authentication)
 5. [Core Features](#core-features)
-6. [Agent Mode (Best Practices)](#agent-mode-best-practices)
-7. [Custom Agent Personas](#custom-agent-personas)
-   - [Install the Personas](#install-the-personas)
-   - [Using the Personas](#using-the-personas)
-   - [Customizing for Your Team](#customizing-for-your-team)
-8. [Security Scanning](#security-scanning)
-9. [Useful Commands](#useful-commands)
-10. [Tips & Best Practices](#tips--best-practices)
-11. [Troubleshooting](#troubleshooting)
+6. [Agent Mode & Custom Agents](#agent-mode--custom-agents)
+7. [Context Management](#context-management)
+8. [Useful Commands](#useful-commands)
+9. [Tips & Best Practices](#tips--best-practices)
+10. [Troubleshooting](#troubleshooting)
 
 ---
 
-## What is Amazon Q Developer?
+## What is Kiro CLI?
 
-Amazon Q Developer has two tiers:
+Kiro CLI is a command-line tool that brings AI-powered code assistance directly to your terminal. Powered by Claude, it provides:
 
-| | **Free Tier** | **Pro Tier** |
-|---|---|---|
-| Price | Free | ~$19/user/month |
-| Code completions | ✅ Unlimited | ✅ Unlimited |
-| Chat in IDE | ✅ | ✅ |
-| Agent for software dev | ✅ Limited | ✅ Unlimited |
-| Security scans | 50/month | Unlimited |
-| Customization (your codebase) | ❌ | ✅ |
-| Admin controls | ❌ | ✅ |
+- **Interactive Chat** — Natural language conversations about your code
+- **Custom Agents** — Task-specific agents optimized for code quality, architecture, and implementation
+- **Context Awareness** — Automatically understands your codebase and project structure
+- **MCP Integration** — Connect external tools and extend capabilities
+- **Smart Hooks** — Pre/post-command automation for workflow integration
 
-> Your company likely provides **Pro Tier** access via AWS IAM Identity Center (SSO). Use that — don't create a personal account.
+Unlike traditional IDE extensions, Kiro CLI integrates seamlessly into your existing terminal workflow, shell history, and command chains.
 
 ---
 
@@ -48,341 +37,236 @@ Amazon Q Developer has two tiers:
 
 | Requirement | Details |
 |---|---|
-| AWS Account / SSO | Your IT/DevOps team will provide this |
-| IDE | VS Code, IntelliJ, PyCharm, WebStorm, or other JetBrains IDE |
-| AWS CLI (optional) | For terminal-based Q usage |
+| OS | macOS or Linux |
+| Shell | bash, zsh, or compatible shell |
+| Kiro Account | Sign up at app.kiro.dev |
+| curl | For installation |
 
 ---
 
-## Installation by IDE
+## Installation
 
-### VS Code
-
-**Step 1 — Install the extension:**
+**Step 1 — Install Kiro CLI:**
 ```bash
-# Via terminal
-code --install-extension AmazonWebServices.amazon-q-vscode
-
-# Or search "Amazon Q" in the VS Code Extensions panel (Ctrl+Shift+X)
+curl -fsSL https://cli.kiro.dev/install | bash
 ```
 
-**Step 2 — Sign in** (see [Authentication](#authentication) below)
-
-**Step 3 — Open the Q panel:**
-- Click the **Amazon Q icon** in the left sidebar
-- Or press `Ctrl+Shift+P` → type `Amazon Q: Focus on Chat View`
-
----
-
-### JetBrains IDEs
-
-*(IntelliJ IDEA, PyCharm, WebStorm, GoLand, Rider, etc.)*
-
-**Step 1 — Install the plugin:**
-1. Open **Settings** → `Plugins` → `Marketplace`
-2. Search for **"Amazon Q"**
-3. Click **Install** → restart the IDE
-
-**Step 2 — Sign in** (see [Authentication](#authentication) below)
-
-**Step 3 — Open the Q panel:**
-- View menu → **Tool Windows** → **Amazon Q**
-
----
-
-### CLI / Terminal
-
-Amazon Q also has a terminal companion that offers inline suggestions and natural language shell commands.
-
+**Step 2 — Verify installation:**
 ```bash
-# macOS
-brew install amazon-q
-
-# After install, set up shell integration
-q integrations install
+kiro --version
 ```
 
-Once installed, press **Option+C** in your terminal to open the Q chat panel, or just start typing a shell command and Q will offer completions.
+**Step 3 — Sign in** (see [Authentication](#authentication) below)
 
 ---
 
 ## Authentication
 
-Your company will use one of two methods:
+Kiro CLI uses browser-based authentication via your Kiro account:
 
-### Option A — AWS IAM Identity Center (SSO) — *Most common for company accounts*
-
-```
-1. Open the Amazon Q panel in your IDE
-2. Click "Sign in with IAM Identity Center"
-3. Enter your company's SSO start URL
-   (e.g., https://yourcompany.awsapps.com/start)
-4. A browser window will open — log in with your company SSO credentials
-5. Return to the IDE — you're authenticated
+```bash
+kiro login
 ```
 
-### Option B — AWS Builder ID (personal/free tier)
+This will:
+1. Open your browser to https://app.kiro.dev
+2. Prompt you to sign in or create an account
+3. Generate an authentication token
+4. Return you to the CLI, fully authenticated
 
-```
-1. Open the Amazon Q panel in your IDE
-2. Click "Sign in with AWS Builder ID"
-3. Create or log into a Builder ID at https://profile.aws.amazon.com
-4. Authorize the IDE connection
-```
-
-> **Company users:** Use Option A. It connects to your org's Pro Tier subscription and gives access to any custom models your team has configured.
+Your authentication persists across sessions and is stored securely in `~/.kiro/config`.
 
 ---
 
 ## Core Features
 
-### Inline Code Completions
-Start typing — Q suggests completions automatically. Press `Tab` to accept.
+### Interactive Chat
+Start a conversation with Claude directly in your terminal:
 
-### Chat in IDE
-Ask questions about your code directly:
+```bash
+kiro chat
+```
+
+Ask questions about your code, get explanations, request implementations:
 - *"What does this function do?"*
-- *"Why is this throwing a NullPointerException?"*
+- *"Why is this throwing an error?"*
 - *"Rewrite this to be more performant"*
-- *"Write unit tests for the selected code"*
+- *"Write unit tests for this component"*
 
-Select code first to give Q context, then ask your question.
+### Context Awareness
+Kiro automatically understands your project structure, files, and codebase through:
+- Directory-based conversation persistence
+- Automatic file indexing and understanding
+- Slash commands to manage context (`/save`, `/load`, `/prompts`)
 
-### Explain & Document
-Right-click selected code → **Amazon Q** → **Explain** or **Generate Tests**
+### Custom Agents
+Leverage pre-configured agents for specific tasks:
+- Code implementation and debugging
+- Architecture review and design
+- Testing and quality assurance
+- Security analysis
 
-### AWS-Specific Help
-Q has deep knowledge of every AWS service:
+Switch between agents with:
+```bash
+kiro chat --agent agent-name
 ```
-"What's the difference between SQS and SNS?"
-"Write a CDK stack that creates an RDS instance with a VPC"
-"How do I set up S3 cross-region replication?"
-```
+
+### MCP Integration
+Connect external tools and data sources using the Model Context Protocol (MCP) to extend Kiro's capabilities with custom integrations.
+
+### Smart Hooks
+Automate workflow tasks with pre/post-command hooks that trigger actions before or after Kiro operations, enabling seamless integration with your development pipeline.
 
 ---
 
-## Agent Mode (Best Practices)
+## Agent Mode & Custom Agents
 
-Amazon Q's **Agent for Software Development** can autonomously make multi-file changes — it plans, implements, and creates a diff for your review.
+Kiro CLI supports custom agents — specialized personas you can create and switch between for specific development tasks. Each agent has its own configuration, instructions, and capabilities.
 
-### How to Invoke an Agent Task
+### Using Agents
 
-In the Q chat panel, just describe a multi-step task:
-
-```
-/dev Add a REST endpoint to the users service that returns paginated 
-results, with validation, error handling, and unit tests
+Switch to an agent with:
+```bash
+kiro chat --agent agent-name
 ```
 
-The `/dev` command signals Q to enter agent mode.
+Or specify an agent for a one-shot command:
+```bash
+kiro chat --agent agent-name "describe the architecture of this project"
+```
 
 ### Agent Best Practices
 
-**✅ Give agents a clear, scoped task**
-```
-# Good
-/dev Refactor the PaymentService class to use the repository pattern, 
-update all callers, and add unit tests for the new structure
-
-# Too vague
-/dev improve the code
-```
-
-**✅ Provide relevant context upfront**
-```
-/dev Using our existing UserRepository pattern (see src/repositories/UserRepository.java),
-create a new OrderRepository with the same structure
-```
-
-**✅ Review the diff before accepting**
-The agent produces a diff. Always read it before clicking "Accept" — especially for changes touching auth, DB schemas, or config files.
-
-**✅ Run one agent task at a time**
-Don't stack multiple `/dev` tasks simultaneously. Let each complete, review, then proceed.
-
-**✅ Use for boilerplate-heavy work**
-Agents shine at:
-- Adding new CRUD endpoints
-- Writing test suites for existing code
-- Migrating between frameworks/patterns
-- Creating CloudFormation / CDK / Terraform from plain English
-
-**❌ Don't use agents for**
-- Changes requiring live environment context (use standard chat instead)
-- Security-sensitive code without careful review
-- Production hotfixes under time pressure
-
----
-
-## Custom Agent Personas
-
-The Q Developer CLI supports **custom agents** — purpose-built personas you can switch between by name. Each one has its own tools, permissions, and pre-loaded context, so you never have to re-explain your stack or role at the start of a session.
-
-Three ready-to-use personas are included alongside this README:
-
-| Agent | Command | Best for |
-|---|---|---|
-| `principal-engineer` | `q chat --agent principal-engineer` | Architecture review, code quality, cross-cutting decisions |
-| `cloud-architect` | `q chat --agent cloud-architect` | AWS infra design, IaC review, security, cost |
-| `senior-engineer` | `q chat --agent senior-engineer` | Feature implementation, debugging, testing |
-
-> **CLI only.** Custom agents are a terminal feature — they are not available in the VS Code or JetBrains extensions.
-
----
-
-### Install the Personas
-
-Run these commands from the directory containing the `q-agents/` folder (included alongside this README):
-
+**✅ Use agents for domain-specific tasks**
 ```bash
-# 1. Create the required directories
-mkdir -p ~/.aws/amazonq/cli-agents
-mkdir -p ~/.aws/amazonq/personas
+# Architecture review
+kiro chat --agent architect "review the database schema"
 
-# 2. Copy the agent config files
-cp q-agents/cli-agents/*.json ~/.aws/amazonq/cli-agents/
+# Security analysis
+kiro chat --agent security "scan this for vulnerabilities"
 
-# 3. Copy the persona prompt files
-cp q-agents/personas/*.md ~/.aws/amazonq/personas/
-
-# 4. Verify the agents are registered
-q agent list
+# Testing
+kiro chat --agent tester "write comprehensive tests for this module"
 ```
 
-**One-liner (if you're already in the right directory):**
-```bash
-mkdir -p ~/.aws/amazonq/cli-agents ~/.aws/amazonq/personas && \
-cp q-agents/cli-agents/*.json ~/.aws/amazonq/cli-agents/ && \
-cp q-agents/personas/*.md ~/.aws/amazonq/personas/ && \
-q agent list
-```
+**✅ Keep agent instructions focused**
+Agents work best when they have a specific purpose and clear constraints. Overly broad agents produce less focused results.
+
+**✅ Combine agents in a workflow**
+Use different agents sequentially for different aspects of your task:
+1. Start with the architect agent for design
+2. Hand off to the engineer agent for implementation
+3. Complete with the tester agent for test coverage
+
+**✅ Customize agents for your team**
+Create team-specific agents that understand your conventions, stack, and standards by modifying agent configuration files.
 
 ---
 
-### Using the Personas
+## Context Management
 
+Kiro automatically maintains conversation context within your project directory. Conversations are scoped to directories, so:
+- `~/project-a/`: Conversations about project-a
+- `~/project-b/`: Separate conversations about project-b
+
+### Managing Context
+
+**Save important context for reuse:**
 ```bash
-# Principal Engineer — review, architecture, raising the quality bar
-q chat --agent principal-engineer
-
-# Cloud Architect — AWS infra design, IaC review, Well-Architected lens
-q chat --agent cloud-architect
-
-# Senior Engineer — hands-on implementation, debugging, testing
-q chat --agent senior-engineer
+/save important-context
 ```
 
-**Permissions are scoped to each role** — intentionally:
-
-| Persona | Read files | Write files | Run commands | Call AWS |
-|---|---|---|---|---|
-| `principal-engineer` | ✅ | ❌ | ❌ | ❌ |
-| `cloud-architect` | ✅ | ❌ | ❌ | ✅ |
-| `senior-engineer` | ✅ | ✅ | ✅ | ❌ |
-
-The principal engineer is a reviewer — it reads and reports, it doesn't write. The cloud architect can call AWS APIs to introspect live infrastructure. The senior engineer has full write and bash access to actually build things.
-
----
-
-### Customizing for Your Team
-
-The most important file to edit is `shared-context.md` — it's injected into **every** agent session and is where you describe your actual stack, conventions, and standards:
-
+**Load previously saved context:**
 ```bash
-nano ~/.aws/amazonq/personas/shared-context.md
+/load important-context
 ```
 
-Fill in:
-- Your tech stack and frameworks
-- Coding conventions and linting config
-- Architecture decisions already made (so Q doesn't re-litigate them)
-- Things that should always be flagged (e.g. wildcard IAM, missing input validation)
-
-The more accurately this file reflects your team, the less you'll need to repeat yourself in every session.
-
----
-
-## Security Scanning
-
-Amazon Q can scan your code for vulnerabilities (OWASP Top 10, CWEs, secrets leakage, etc.):
-
+**View available prompts and context:**
 ```bash
-# In the IDE: right-click project → Amazon Q → Run Security Scan
-
-# Or via CLI
-q security-scan --path ./src
+/prompts
 ```
 
-**What it detects:**
-- Hardcoded credentials / secrets
-- SQL injection vulnerabilities
-- Cross-site scripting (XSS)
-- Insecure cryptography
-- Path traversal issues
-- Log injection
-
-**After a scan:** Q provides a description of each finding, the exact line, and a suggested fix. You can apply fixes directly from the scan results panel.
-
----
+**Share context across your team**
+Check your steering files and knowledge bases in the Kiro app to collaborate with teammates and standardize how Kiro understands your codebase.
 
 ## Useful Commands
 
-### IDE Chat Slash Commands
+### Core Commands
+
+```bash
+# Start interactive chat
+kiro chat
+
+# Ask a one-shot question
+kiro chat "how do I implement pagination in Go?"
+
+# Use a specific agent
+kiro chat --agent architect "review this architecture"
+
+# Log in to your Kiro account
+kiro login
+
+# Log out
+kiro logout
+
+# Check version
+kiro --version
+
+# Get help
+kiro --help
+```
+
+### Slash Commands in Chat
+
+Within an interactive chat session, use these commands:
 
 | Command | What it does |
 |---|---|
-| `/dev <task>` | Launch agent for multi-file code changes |
-| `/explain` | Explain the selected code |
-| `/fix` | Fix issues in selected code |
-| `/tests` | Generate unit tests for selected code |
-| `/doc` | Generate documentation/docstrings |
-| `/review` | Review selected code for issues |
-
-### CLI Commands
-
-```bash
-# Open Q chat in terminal
-q chat
-
-# Ask a one-shot question
-q chat "how do I list all S3 buckets with versioning disabled using AWS CLI"
-
-# Run security scan
-q security-scan --path .
-
-# Translate natural language to a shell command
-q translate "find all files modified in the last 7 days and larger than 10MB"
-```
+| `/save context-name` | Save current conversation context for reuse |
+| `/load context-name` | Load a previously saved context |
+| `/prompts` | View available prompts and steering instructions |
+| `/help` | Show available slash commands |
+| `/clear` | Clear current conversation history |
+| `/exit` | Exit chat |
 
 ---
 
 ## Tips & Best Practices
 
-**Highlight before you ask**
-Always select the relevant code before using chat or commands — Q uses the selection as context. Without a selection, it uses the whole open file.
-
-**Be AWS-specific when possible**
-```
-# Generic
-"How do I read from a queue?"
-
-# Gets much better answers
-"How do I consume messages from an SQS FIFO queue in Python using boto3,
-with visibility timeout handling and dead letter queue support?"
+**Provide project context upfront**
+Include file paths and project structure when asking questions. Kiro learns your codebase automatically, but explicit context helps:
+```bash
+kiro chat "In my Go project (src/services/), how should I structure error handling?"
 ```
 
-**Use Q for unfamiliar AWS services**
-If you're working with a service you don't know well (e.g., EventBridge, Step Functions), ask Q to scaffold the implementation before diving into docs.
-
-**Ask it to explain errors**
-Paste an error message or stack trace directly into the chat:
-```
-I'm getting this error in my Lambda: [paste error]
-What's causing it and how do I fix it?
+**Use slash commands to manage context**
+Save context for complex projects or frequently-asked topics:
+```bash
+/save go-conventions
+/save architecture-decisions
 ```
 
-**Keep chats focused**
-Start a new chat for each new topic. Long conversations with mixed context produce worse results.
+**Keep conversations focused**
+Start a new chat for each distinct topic. Long conversations with mixed subjects produce less accurate results.
+
+**Leverage agents for different roles**
+- Use one agent for architecture decisions
+- Use another for implementation
+- Use another for testing
+
+This prevents the AI from switching contexts constantly.
+
+**Put steering files in your repo**
+Add `.kiro/steering.md` to your repository root to share project conventions with all team members:
+```markdown
+# Our Stack
+- Go 1.21, PostgreSQL, React
+- Clean architecture pattern
+- All services use dependency injection
+```
+
+**Review generated code carefully**
+Claude is powerful but can make mistakes. Always review suggestions before applying them to your codebase, especially for security-sensitive code.
 
 ---
 
@@ -390,17 +274,17 @@ Start a new chat for each new topic. Long conversations with mixed context produ
 
 | Problem | Fix |
 |---|---|
-| Extension not activating | Ensure you're on VS Code 1.75+ or a supported JetBrains version |
-| SSO login not working | Confirm your start URL with IT; check you're on the company VPN if required |
-| Completions not appearing | Check Q is enabled: bottom status bar should show "Amazon Q" as active |
-| Agent task stalls | Cancel and re-try with a more specific task description |
-| "Not authorized" error | Your Pro license may not be assigned — contact your AWS admin |
+| `kiro: command not found` | Reinstall with `curl -fsSL https://cli.kiro.dev/install \| bash` and restart your shell |
+| `Not authenticated` | Run `kiro login` to authenticate with your Kiro account |
+| `Agent not found` | Verify the agent exists in your configuration with `kiro --help` |
+| `Chat times out` | Your internet connection may be unstable, or the request is too large. Try a simpler query |
+| `Permission denied` | Ensure `~/.kiro/config` has correct permissions (`chmod 600 ~/.kiro/config`) |
 
 ---
 
 ## Resources
 
-- 📖 Official Docs: https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/what-is.html
-- 🔧 VS Code Extension: https://marketplace.visualstudio.com/items?itemName=AmazonWebServices.amazon-q-vscode
-- 🔧 JetBrains Plugin: https://plugins.jetbrains.com/plugin/24267-amazon-q
-- 🖥️ CLI Docs: https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/command-line.html
+- 📖 Official Docs: https://kiro.dev/cli/
+- 🌐 Kiro App: https://app.kiro.dev
+- 🔧 Installation: https://cli.kiro.dev/install
+- 📝 GitHub Issues: Report bugs at the Kiro project repository

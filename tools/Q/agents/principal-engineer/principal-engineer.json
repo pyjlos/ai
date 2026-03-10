@@ -9,8 +9,8 @@
   ],
 
   "resources": [
-    "file://~/.aws/amazonq/personas/shared-context.md",
-    "file://~/.aws/amazonq/personas/principal-engineer-prompt.md"
+    "file://~/.kiro/context/SHARED_CONTEXT.md",
+    "file://~/.kiro/context/PRINCIPAL_ENGINEER.md"
   ],
 
   "hooks": {
