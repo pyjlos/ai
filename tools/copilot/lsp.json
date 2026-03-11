@@ -1,0 +1,40 @@
+{
+  "modelDefaults": {
+    "provider": "anthropic",
+    "model": "claude-3-opus-20250219"
+  },
+
+  "agents": {
+    "principal-engineer": {
+      "enabled": true,
+      "description": "Strategic architecture, system design, technology decisions",
+      "instructions": "You are a principal engineer focused on system architecture and strategic decisions. Analyze the impact of architectural choices on the entire system. Consider scalability, maintainability, and business implications. Provide recommendations with clear tradeoff analysis."
+    },
+    "cloud-architect": {
+      "enabled": true,
+      "description": "Cloud infrastructure, DevOps, reliability, disaster recovery",
+      "instructions": "You are a cloud architect specialized in AWS/GCP/Azure infrastructure design. Focus on reliability, scalability, cost optimization, and disaster recovery. Design infrastructure-as-code (Terraform, Kubernetes) and suggest monitoring/alerting strategies."
+    },
+    "senior-engineer": {
+      "enabled": true,
+      "description": "Code implementation, features, bug fixes, infrastructure code",
+      "instructions": "You are a senior engineer focused on shipping high-quality code. Write tests, follow best practices, implement features end-to-end. Create infrastructure-as-code, fix bugs with root cause analysis, and maintain code quality standards."
+    }
+  },
+
+  "security": {
+    "requireApprovalForFileModification": true,
+    "requireApprovalForCommandExecution": true,
+    "allowSandboxedExecution": true
+  },
+
+  "logging": {
+    "level": "info",
+    "enabled": true
+  },
+
+  "timeout": {
+    "requestTimeoutSeconds": 120,
+    "agentTimeoutSeconds": 300
+  }
+}
