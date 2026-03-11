@@ -1,0 +1,86 @@
+{
+  "mcpServers": {
+    "github": {
+      "description": "GitHub - search repositories, manage PRs, issues, view code, list commits",
+      "transport": "http",
+      "url": "https://api.github.com",
+      "auth": {
+        "type": "token",
+        "tokenEnv": "GITHUB_PERSONAL_ACCESS_TOKEN"
+      },
+      "tools": [
+        "search_github_repositories",
+        "get_github_issues",
+        "create_github_issue",
+        "search_github_code",
+        "list_pull_requests",
+        "get_pull_request",
+        "list_commits"
+      ],
+      "setup": {
+        "url": "https://github.com/settings/tokens",
+        "instructions": "1. Go to https://github.com/settings/tokens\n2. Click 'Generate new token (classic)'\n3. Name: 'Claude Code'\n4. Check scopes: repo, read:org, read:user\n5. Copy token (starts with ghp_)\n6. Set environment variable: export GITHUB_PERSONAL_ACCESS_TOKEN=ghp_xxx"
+      }
+    },
+
+    "filesystem": {
+      "description": "Filesystem - read and write files outside the current directory",
+      "transport": "stdio",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem"],
+      "paths": [
+        "$HOME"
+      ],
+      "setup": {
+        "instructions": "Filesystem access is pre-configured. Claude Code can read/write files in your home directory (~) and subdirectories."
+      }
+    }
+  },
+
+  "configuration": {
+    "scope": "user",
+    "location": "~/.mcp.json",
+    "description": "MCP (Model Context Protocol) servers connect Claude Code to external tools and services"
+  },
+
+  "setup_instructions": {
+    "step1_github_token": {
+      "title": "Get GitHub Personal Access Token",
+      "url": "https://github.com/settings/tokens",
+      "steps": [
+        "Click 'Generate new token (classic)'",
+        "Name it: 'Claude Code'",
+        "Select these scopes:",
+        "  - repo (full control of private repositories)",
+        "  - read:org (read organization information)",
+        "  - read:user (read user profile information)",
+        "Copy the token (it starts with 'ghp_')"
+      ]
+    },
+
+    "step2_set_environment": {
+      "title": "Set Environment Variable",
+      "options": [
+        "Temporarily (this session only): export GITHUB_PERSONAL_ACCESS_TOKEN=ghp_xxxxxxxxxxxx",
+        "Permanently (add to ~/.bashrc or ~/.zshrc): echo 'export GITHUB_PERSONAL_ACCESS_TOKEN=ghp_xxxxxxxxxxxx' >> ~/.bashrc"
+      ]
+    },
+
+    "step3_verify": {
+      "title": "Verify Setup",
+      "commands": [
+        "echo $GITHUB_PERSONAL_ACCESS_TOKEN  # Should show your token",
+        "claude mcp list  # Should show github and filesystem"
+      ]
+    },
+
+    "step4_use_in_prompts": {
+      "title": "Use in Claude Code",
+      "examples": [
+        "claude \"Search GitHub for our authentication libraries\"",
+        "claude \"List my open pull requests\"",
+        "claude \"Find Python files in our repos that use async/await\""
+      ]
+    }
+  }
+}

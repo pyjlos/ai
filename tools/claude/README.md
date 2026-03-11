@@ -1,22 +1,106 @@
-# Claude Code — Getting Started Guide
+# Claude Code — Evaluation Kit
 
-> **Claude Code** is Anthropic's AI-powered CLI tool that lives in your terminal and understands your codebase. It can read files, run commands, write code, and connect to your tools via MCP servers.
+**Complete, production-ready evaluation setup for Claude Code as an AI coding assistant.**
+
+This kit includes everything needed to thoroughly evaluate Claude Code's capabilities:
+- ✅ 4 specialized agents (researcher, implementer, reviewer, architect)
+- ✅ Multi-agent workflows and coordination
+- ✅ Fine-grained permissions & safety guardrails
+- ✅ Reusable skills for common tasks
+- ✅ MCP integrations (GitHub, Slack, filesystem)
+- ✅ Team standards & best practices codified
+- ✅ Automation hooks for quality gates
+
+**Not just "Claude Code basics" — this is everything for a production evaluation.**
+
+---
+
+## Quick Start (5 minutes)
+
+### 1. Install Claude Code
+```bash
+npm install -g @anthropic-ai/claude-code
+claude --version  # Verify
+```
+
+### 2. Copy Evaluation Kit
+```bash
+cp -r .claude your-project/
+cp .mcp.json your-project/
+```
+
+### 3. Try The Three Agents
+```bash
+cd your-project
+
+# Strategic decisions
+claude "Principal Engineer, should we migrate to microservices?"
+
+# Infrastructure & cloud design
+claude "Cloud Architect, design multi-region disaster recovery"
+
+# Implementation & features
+claude "Senior Engineer, implement the user authentication feature"
+```
+
+---
+
+## Learning Paths
+
+Choose based on your time available:
+
+| Path | Time | What you'll learn |
+|------|------|-------------------|
+| **Quick Demo** | 30 min | Agent roles and switching between strategic, infrastructure, and implementation tasks |
+| **Hands-On** | 2 hours | Real workflows with all three agents on your code |
+| **Deep Evaluation** | 1 week | Full capabilities, language support, integrations, team readiness |
+| **Pilot** | 4 weeks | Production-ready assessment with your team |
+
+**Start with the quick demo, then dive deeper based on interest.**
+
+---
+
+## The Three Agent Roles
+
+This kit includes three specialized agents designed for different expertise levels:
+
+| Agent | Focus | Use When | Tools |
+|-------|-------|----------|-------|
+| **Principal Engineer** | Strategy, architecture, vision | Strategic decisions, architectural reviews | Read-only codebase analysis |
+| **Cloud Architect** | Infrastructure, reliability, DevOps | Cloud design, disaster recovery, scaling | Terraform, infrastructure planning |
+| **Senior Engineer** | Implementation, features, DevOps | Building features, bug fixes, CI/CD | Full write access, testing, scripting |
+
+### Language Support
+
+- **Python** — See `.claude/rules/python.md`
+- **JavaScript/TypeScript** — See `.claude/rules/javascript.md`
+- **Go** — See `.claude/rules/go.md`
+
+Each language has specific conventions, tooling, and best practices defined in the rules.
 
 ---
 
 ## Table of Contents
 
-1. [Prerequisites](#prerequisites)
-2. [Installation](#installation)
-3. [First Run](#first-run)
-4. [MCP Integrations](#mcp-integrations)
-   - [GitHub](#github)
-   - [Atlassian (Jira + Confluence)](#atlassian-jira--confluence)
-   - [Slack](#slack)
-   - [Filesystem](#filesystem)
-5. [Automated Setup Script](#automated-setup-script)
-6. [Useful Commands](#useful-commands)
-7. [Tips & Tricks](#tips--tricks)
+1. [Getting Started](#quick-start-5-minutes) (you are here)
+2. [Setup Guides](#setup-options)
+   - [Project-Level Setup](./SETUP_GUIDE.md) — For a single project
+   - [Global Setup](./GLOBAL_SETUP.md) — For all projects/repos
+3. [Workflow Examples](./WORKFLOW_EXAMPLES.md) — Real-world usage patterns
+4. [Prerequisites](#prerequisites)
+5. [Installation](#installation)
+
+---
+
+## Setup Options
+
+Choose based on your needs:
+
+| Option | Use When | Read |
+|--------|----------|------|
+| **Project-Level** | Setting up one repo with custom rules | [SETUP_GUIDE.md](./SETUP_GUIDE.md) |
+| **Global** | Want Claude Code everywhere with team standards | [GLOBAL_SETUP.md](./GLOBAL_SETUP.md) |
+| **Both** | Some global standards + project overrides | Both guides |
 
 ---
 

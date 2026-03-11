@@ -1,0 +1,147 @@
+{
+  "version": "1.0",
+  "description": "Claude Code configuration with principal-engineer, cloud-architect, senior-engineer agents",
+
+  "permissions": {
+    "comment": "Defines what tools each agent can use. See agents/ for agent-specific overrides.",
+    "default": {
+      "read": {
+        "paths": ["**/*"],
+        "exclude": [".env", ".env.*", "*.key", "*.pem", ".aws", ".ssh"]
+      },
+      "bash": {
+        "allow": ["git status", "git log", "git diff", "find", "grep", "ls", "pwd"],
+        "deny": ["rm", "mv", "cp", "chmod", "sudo"]
+      }
+    }
+  },
+
+  "agents": {
+    "principal-engineer": {
+      "description": "Strategic technical decisions and architecture guidance",
+      "permissions": {
+        "read": {
+          "allow": true,
+          "paths": ["**/*"],
+          "exclude": [".env", ".env.*", "*.key", "*.pem", ".aws", ".ssh", ".credentials"]
+        },
+        "write": false,
+        "bash": {
+          "allow": ["git status", "git log", "git diff", "git show", "find", "grep", "ls", "pwd"],
+          "deny": ["rm", "mv", "cp", "chmod", "sudo", "git commit", "git push"]
+        }
+      }
+    },
+
+    "cloud-architect": {
+      "description": "Cloud infrastructure, reliability, and DevOps design",
+      "permissions": {
+        "read": {
+          "allow": true,
+          "paths": ["**/*"],
+          "exclude": [".env", ".env.*", "*.key", "*.pem", ".aws", ".ssh", ".credentials"]
+        },
+        "write": {
+          "allow": true,
+          "paths": ["**/*.tf", "**/*.tfvars", "kubernetes/**/*", "docker/**/*", ".github/workflows/**/*", "scripts/**/*.sh"],
+          "exclude": ["**/*.prod.tf"]
+        },
+        "bash": {
+          "allow": ["terraform plan", "terraform validate", "docker build", "kubectl", "git status", "git diff", "find", "grep"],
+          "deny": ["terraform apply", "kubectl apply", "docker push", "sudo", "rm -rf"]
+        }
+      }
+    },
+
+    "senior-engineer": {
+      "description": "Feature implementation, bug fixes, DevOps scripting",
+      "permissions": {
+        "read": {
+          "allow": true,
+          "paths": ["**/*"],
+          "exclude": [".env", ".env.production", "*.key", "*.pem", ".aws", ".ssh", ".credentials"]
+        },
+        "write": {
+          "allow": true,
+          "paths": ["src/**/*", "tests/**/*", "scripts/**/*", "package.json", ".eslintrc*", "tsconfig.json", "**/*.py", "**/*.go"],
+          "exclude": ["src/config/secrets*", "src/**/*.prod.ts"]
+        },
+        "bash": {
+          "allow": ["npm run test", "npm run build", "npm run lint", "npm run format", "python -m pytest", "go test", "git status", "git diff", "git add", "git commit", "git log", "find", "grep", "terraform plan"],
+          "deny": ["npm install", "npm update", "sudo", "rm -rf", "git push", "git reset --hard", "terraform apply"]
+        }
+      }
+    }
+  },
+
+  "environment": {
+    "LANGUAGES": "python,javascript,go",
+    "TESTING_FRAMEWORK": "pytest,jest,go-test",
+    "TYPESCRIPT_STRICT": true,
+    "LOG_LEVEL": "info"
+  },
+
+  "tools": {
+    "python": {
+      "enabled": true,
+      "formatter": "black",
+      "linter": "ruff",
+      "typeChecker": "pyright"
+    },
+    "javascript": {
+      "enabled": true,
+      "formatter": "prettier",
+      "linter": "eslint",
+      "typeChecker": "typescript"
+    },
+    "go": {
+      "enabled": true,
+      "formatter": "gofmt",
+      "linter": "golangci-lint",
+      "testRunner": "go test"
+    }
+  },
+
+  "safety": {
+    "comment": "Prevents accidental or malicious changes",
+    "blockList": {
+      "files": [".env*", "*.key", "*.pem", ".aws", ".ssh", ".docker/secrets"],
+      "commands": ["sudo", "rm -rf", "dd"]
+    },
+    "requireApproval": {
+      "commands": ["git push", "npm publish"],
+      "paths": ["package.json", "go.mod", "requirements.txt"]
+    },
+    "limits": {
+      "maxFilesPerSession": 500,
+      "maxCommandsPerSession": 100,
+      "commandTimeoutSeconds": 60
+    }
+  },
+
+  "features": {
+    "autoMemory": {
+      "enabled": true,
+      "projectScope": true
+    },
+    "hooks": {
+      "enabled": true,
+      "location": ".claude/hooks"
+    },
+    "mcp": {
+      "enabled": true,
+      "configFile": ".mcp.json"
+    }
+  },
+
+  "guidelines": {
+    "comment": "Best practices for using Claude Code effectively",
+    "architecture": "Use principal-engineer for strategic decisions",
+    "infrastructure": "Use cloud-architect for infrastructure design",
+    "implementation": "Use senior-engineer for coding and scripting",
+    "testing": "Run tests before considering implementation complete",
+    "documentation": "Update docs when changing APIs or patterns",
+    "commits": "Commit frequently with clear, descriptive messages explaining why",
+    "context": "Start sessions with clear scope and constraints"
+  }
+}
