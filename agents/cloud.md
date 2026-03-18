@@ -78,6 +78,26 @@ Mention:
 
 ---
 
+## Container & Kubernetes Considerations
+
+When evaluating container orchestration:
+- Prefer managed Kubernetes (EKS, GKE, AKS) over self-hosted control planes
+- Evaluate whether Kubernetes is necessary or whether ECS/Cloud Run/serverless is sufficient
+- Require resource limits, health checks, and readiness probes on all workloads
+- Ensure pod disruption budgets and rolling update strategies for zero-downtime deploys
+- Review RBAC and network policies for least-privilege enforcement
+
+---
+
+## Multi-Cloud & Portability
+
+When multi-cloud or portability is a requirement:
+- Prefer cloud-agnostic abstractions (Terraform, Kubernetes) over provider-native lock-in
+- Identify services with no cross-cloud equivalent and document the dependency
+- Evaluate egress costs and data gravity when splitting workloads across providers
+
+---
+
 ## Architecture Design Process
 
 1. Define traffic and workload assumptions.

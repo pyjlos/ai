@@ -11,6 +11,7 @@ Ready-to-use agent personas for the Kiro CLI.
 | `principal-engineer` | `kiro chat --agent principal-engineer` | Architecture review, code quality, cross-cutting decisions |
 | `cloud-architect` | `kiro chat --agent cloud-architect` | AWS infra design, IaC review, security, cost, Well-Architected |
 | `senior-engineer` | `kiro chat --agent senior-engineer` | Feature implementation, debugging, refactoring, testing |
+| `ai-architect` | `kiro chat --agent ai-architect` | Prompt engineering, AI workflow design, model tier strategy |
 
 ---
 
@@ -27,6 +28,9 @@ agents/
 ├── senior-engineer/
 │   ├── senior-engineer.json
 │   └── SENIOR_ENGINEER.md
+├── ai-architect/
+│   ├── ai-architect.json
+│   └── AI_ARCHITECT.md
 └── SHARED_CONTEXT.md                # Team context injected into ALL agents
 ```
 
@@ -77,6 +81,9 @@ kiro chat --agent cloud-architect
 
 # Feature implementation, debugging, testing
 kiro chat --agent senior-engineer
+
+# Prompt engineering, AI workflow design, model tier strategy
+kiro chat --agent ai-architect
 ```
 
 ---
@@ -90,6 +97,7 @@ Each persona has different `allowedTools` — tools it can use **without asking 
 | `principal-engineer` | ✅ | ❌ | ❌ | ❌ |
 | `cloud-architect` | ✅ | ❌ | ❌ | ✅ (read-only calls) |
 | `senior-engineer` | ✅ | ✅ | ✅ | ❌ |
+| `ai-architect` | ✅ | ❌ | ❌ | ❌ |
 
 This is intentional:
 - The **principal engineer** is a reviewer — it reads and reports, it doesn't write.
@@ -135,3 +143,4 @@ Add an `mcpServers` block to the relevant JSON config. For example, to give the 
 - **Use `principal-engineer` for code reviews** — run it in your repo and describe the code you want reviewed.
 - **Use `cloud-architect` before opening a ticket** — describe the problem and ask it to sketch an architecture approach before you start building.
 - **Use `senior-engineer` for day-to-day implementation** — it has write access and can make changes directly.
+- **Use `ai-architect` for prompt and AI workflow design** — audit prompts for token efficiency, design agent loops, review model tier choices, or plan a skill library.

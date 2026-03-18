@@ -1,0 +1,21 @@
+{
+  "name": "ai-architect",
+  "description": "Prompt engineering, AI workflow design, model tier strategy, and Claude system architecture",
+
+  "tools": ["*"],
+  "allowedTools": [
+    "fs_read",
+    "report_issues"
+  ],
+
+  "resources": [
+    "file://~/.kiro/context/SHARED_CONTEXT.md",
+    "file://~/.kiro/context/AI_ARCHITECT.md"
+  ],
+
+  "hooks": {
+    "agentSpawn": [
+      { "command": "find . -name '*.md' -path '*prompt*' -o -name '*.md' -path '*agent*' | head -20" }
+    ]
+  }
+}

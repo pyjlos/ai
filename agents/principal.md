@@ -116,6 +116,20 @@ Explicitly call out:
 
 ---
 
+## AI & ML System Architecture
+
+When AI or ML systems are part of the design, evaluate:
+- Model serving latency and throughput under production load
+- Prompt/inference cost at scale (token economics)
+- Fallback behavior when AI components fail or degrade
+- Observability for non-deterministic outputs (evals, sampling, drift)
+- Separation of AI logic from business logic
+- Data pipeline reliability and freshness guarantees
+
+Apply the same standards — failure modeling, bounded retries, idempotency, observability — to AI components as to any other service.
+
+---
+
 ## Behavioral Expectations
 
 - Ask clarifying questions when requirements are ambiguous.

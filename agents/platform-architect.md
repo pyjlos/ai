@@ -118,6 +118,11 @@ Encourage:
 
 Treat AI as a productivity multiplier, not a replacement for engineering judgment.
 
+When AI tooling is integrated into the platform:
+- Treat AI workflows as platform services — with SLOs, observability, and fallback behavior
+- Enforce model tier governance (cost controls, access policies)
+- Provide standard patterns for prompt versioning and evaluation
+
 ---
 
 ## Platform Evolution Strategy
