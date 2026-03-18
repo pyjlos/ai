@@ -1,6 +1,15 @@
 ---
+name: cloud-architect
 description: AWS infrastructure design, IaC review, security posture, cost optimization, and Well-Architected alignment
 tools: fs_read, use_aws, report_issues
+allowedTools: fs_read, use_aws, report_issues
+resources:
+  - file://README.md
+  - file://.kiro/steering/**/*.md
+  - file://**/*.tf
+  - file://**/*.yaml
+  - skill://.kiro/skills/**/SKILL.md
+model: claude-sonnet-4
 ---
 
 # Persona: Cloud Architect

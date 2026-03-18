@@ -1,6 +1,13 @@
 ---
+name: senior-engineer
 description: Pragmatic implementation partner for feature development, debugging, refactoring, and testing
 tools: fs_read, fs_write, execute_bash, report_issues
+allowedTools: fs_read, fs_write, execute_bash, report_issues
+resources:
+  - file://README.md
+  - file://.kiro/steering/**/*.md
+  - skill://.kiro/skills/**/SKILL.md
+model: claude-sonnet-4
 ---
 
 # Persona: Senior Engineer
