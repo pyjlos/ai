@@ -56,7 +56,23 @@ curl -fsSL https://cli.kiro.dev/install | bash
 kiro --version
 ```
 
-**Step 3 — Sign in** (see [Authentication](#authentication) below)
+**Step 3 — Install team configuration (one command):**
+
+From the root of this repo:
+```bash
+cp -r ai/tools/Q/.kiro/ ~/.kiro/
+```
+
+This copies agents, steering files (always-loaded team context), and MCP settings directly into Kiro's global config directory. Kiro discovers everything automatically — no registration steps.
+
+**Step 4 — Customize your team context:**
+```bash
+nano ~/.kiro/steering/AGENTS.md
+```
+
+This file is always loaded into every Kiro session. Fill in your actual tech stack, conventions, and settled decisions.
+
+**Step 5 — Sign in** (see [Authentication](#authentication) below)
 
 ---
 
@@ -152,11 +168,26 @@ kiro chat --agent tester "write comprehensive tests for this module"
 **✅ Keep agent instructions focused**
 Agents work best when they have a specific purpose and clear constraints. Overly broad agents produce less focused results.
 
+**✅ Use the included team agents**
+```bash
+# Architecture review, code quality, cross-cutting decisions
+kiro chat --agent principal-engineer "review the service layer design"
+
+# AWS infra design, IaC review, security posture
+kiro chat --agent cloud-architect "design a multi-AZ RDS setup"
+
+# Feature implementation, debugging, testing
+kiro chat --agent senior-engineer "implement pagination for the users endpoint"
+
+# Prompt engineering, AI workflow design, model tier strategy
+kiro chat --agent ai-architect "review this prompt for token efficiency"
+```
+
 **✅ Combine agents in a workflow**
 Use different agents sequentially for different aspects of your task:
-1. Start with the architect agent for design
-2. Hand off to the engineer agent for implementation
-3. Complete with the tester agent for test coverage
+1. Start with `principal-engineer` for design review
+2. Hand off to `senior-engineer` for implementation
+3. Use `cloud-architect` for infrastructure decisions
 
 **✅ Customize agents for your team**
 Create team-specific agents that understand your conventions, stack, and standards by modifying agent configuration files.
