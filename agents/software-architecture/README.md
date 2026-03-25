@@ -15,6 +15,7 @@ Architecture-focused agent instruction files for system design, API contracts, c
 | `12factor-architect.md` | Cloud-Native Architect | 12-Factor App methodology, portability, stateless design, dev/prod parity |
 | `aws-expert.md` | Senior AWS Architect | AWS service selection, networking, security, cost optimization, IaC |
 | `aws-well-architected.md` | Well-Architected Reviewer | Six-pillar reviews, findings classification, remediation planning |
+| `distributed-systems-architect.md` | Principal Distributed Systems Architect | Consensus, consistency models, replication, partitioning, distributed transactions, fault tolerance |
 
 ## Usage
 
@@ -71,6 +72,7 @@ These agents work well together for complex workloads:
 claude --agent software-architecture/solution-architect.md  "design the overall system"
 claude --agent software-architecture/aws-expert.md          "map the design to AWS services"
 claude --agent software-architecture/aws-well-architected.md "review the design against all six pillars"
+claude --agent software-architecture/distributed-systems-architect.md "design a multi-region active-active event sourcing system"
 
 # API-first service design
 claude --agent software-architecture/api-designer.md        "design the API contract"
