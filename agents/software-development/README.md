@@ -16,6 +16,7 @@ Language-specific agent instruction files for code review, implementation, and t
 | `bash.md` | Bash | POSIX-safe, shellcheck patterns |
 | `typescript.md` | TypeScript | 5.x, strict mode, Vitest |
 | `sql.md` | SQL | PostgreSQL 16+, query optimization |
+| `database-admin.md` | Database Admin | Safe operations, DBA practices, exploration, migrations |
 
 ## Usage
 
@@ -41,7 +42,7 @@ for f in ~/repos/ai/agents/software-development/*.md; do
 done
 ```
 
-This makes them available as subagent types: `python-agent`, `java-agent`, `go-agent`, `bash-agent`, `typescript-agent`, `sql-agent`.
+This makes them available as subagent types: `python-agent`, `java-agent`, `go-agent`, `bash-agent`, `typescript-agent`, `sql-agent`, `database-admin`.
 
 Each agent file can include a frontmatter block to control the model and description:
 
