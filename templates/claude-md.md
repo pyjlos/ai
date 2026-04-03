@@ -1,68 +1,69 @@
 # CLAUDE.md
 # Loaded by Claude Code at the start of every session.
 # Keep it short — every line costs context. Prune regularly.
+# Placeholders use [ALL_CAPS] — fill in or delete before committing.
 
-## Project overview
-This is [PROJECT NAME] — [one sentence description].
-Stack: Python 3.12+, [e.g. FastAPI / Django / Typer], uv, Ruff, Mypy
-Purpose: [e.g., REST API for X / CLI tool for Y / data pipeline for Z]
+## Project
+[PROJECT_NAME] — [one sentence: what it does and who uses it]
+Stack: Python [VERSION], [FRAMEWORK e.g. FastAPI | Typer | Prefect], uv, Ruff, Mypy
+Type: [REST API | CLI tool | data pipeline | background worker | library]
 
-## Repo structure
-src/[package]/    # Main package (importable as `[package]`)
-  api/            # Route handlers / controllers
-  core/           # Business logic
-  models/         # Pydantic schemas & DB models
-  utils/          # Shared helpers
-tests/            # Pytest test suite
-pyproject.toml    # Project metadata, deps, tool config
-uv.lock           # Lockfile — commit this
+## Repo layout
+[Describe your actual structure. Example for a src-layout FastAPI service:]
+src/[PACKAGE]/
+  api/        # Route handlers
+  core/       # Business logic
+  models/     # Pydantic schemas and DB models
+  utils/      # Shared helpers
+tests/
+pyproject.toml
+uv.lock       # Commit this
 
-## Environment & dependency management
-This project uses uv — do NOT use pip, pipenv, or poetry.
+## Dependency management — uv only
+Do NOT use pip, pipenv, or poetry.
 
-uv sync                    # install all deps (creates .venv if needed)
-uv add <package>           # add a runtime dependency
-uv add --dev <package>     # add a dev-only dependency
-uv remove <package>        # remove a dependency
-uv run <command>           # run a command inside the venv
+uv sync                   # install all deps (creates .venv)
+uv add <pkg>              # add runtime dep
+uv add --dev <pkg>        # add dev-only dep
+uv remove <pkg>           # remove dep
+uv run <cmd>              # run inside venv
 
-# Python version is pinned in .python-version and pyproject.toml.
-# Never change the Python version without asking first.
+## Commands
+uv run [DEV_SERVER_CMD]   # [e.g. "fastapi dev" | "python -m [PACKAGE]"]
+uv run pytest -x          # run tests, stop on first failure
+uv run mypy src/          # type-check
+uv run ruff check .       # lint
+uv run ruff format .      # format
 
-## Key commands
-uv run fastapi dev         # start dev server (port 8000)
-uv run pytest              # run full test suite
-uv run pytest tests/path/test_file.py  # run a single test file
-uv run mypy src/           # type-check
-uv run ruff check .        # lint
-uv run ruff format .       # format
+## Verifying changes
+Run all three before marking a task done:
+1. `uv run mypy src/` — zero errors
+2. `uv run ruff check .` — zero errors
+3. `uv run pytest tests/[RELEVANT_FILE].py` — affected tests pass
 
-# IMPORTANT: Always run mypy + ruff after making changes.
-# Prefer running a single test file over the full suite for speed.
+## Must Never Do
+- Edit uv.lock manually — let uv manage it
+- Install packages globally — always use `uv add`
+- Change the Python version (pinned in .python-version and pyproject.toml) without asking
+- [PROJECT-SPECIFIC hard prohibitions — e.g. "never truncate migration files"]
 
-## How to verify your work
-1. `uv run mypy src/` must pass — no type errors
-2. `uv run ruff check .` must pass — no lint errors
-3. `uv run pytest tests/[relevant_file].py` — affected tests green
+## Workflow
+- For tasks > ~1 hour: write a plan and confirm before coding
+- [OPTIONAL: migration command — e.g. "uv run alembic upgrade head"]
+- [OPTIONAL: seed/fixture command — e.g. "uv run python scripts/seed.py"]
+- [Add team-specific workflow rules here]
 
-## Code conventions
-- Python 3.12+ only — use match/case, type unions (X | Y), f-strings
-- All public functions and classes must have type annotations
-- Use `from __future__ import annotations` at the top of every file
-- Prefer `pathlib.Path` over `os.path`
-- Prefer `httpx` over `requests` for HTTP calls
-- [Add project-specific conventions here]
-
-## Workflow rules
-- Never edit uv.lock manually — let uv manage it
-- Never install packages globally — always use `uv add`
-- Migrations: use `uv run alembic upgrade head` (never edit migrations by hand)
-- Create a plan before writing code on tasks > ~1hr
-- [Add your team-specific rules here]
+## Known gotchas
+[Document what Claude gets wrong on this project specifically.
+ Delete this section if empty — don't leave it as a placeholder.
+ Examples:
+ - "The `EventBus` in core/events.py is a singleton — never instantiate it directly"
+ - "Integration tests require a running Postgres; see docker-compose.yml"
+ - "src/[PACKAGE]/config.py must be imported before any other module"]
 
 ## References
-See @README.md for full setup instructions
-See @docs/architecture.md for system design
-See @pyproject.toml for available scripts and tool config
+For full setup: README.md
+For system design: docs/architecture.md
+For scripts and tool config: pyproject.toml
 
-# Local/personal overrides → CLAUDE.local.md (gitignored)
+# Personal overrides → CLAUDE.local.md (gitignored)
