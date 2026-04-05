@@ -6,8 +6,10 @@
 # chosen AI tool: Claude Code, GitHub Copilot, or Amazon Q / Kiro.
 #
 # Each tool has different conventions:
-#   Claude Code  — agents: ~/.claude/agents/<name>.md (flat)
-#                  skills: ~/.claude/skills/<name>/SKILL.md
+#   Claude Code  — agents:   ~/.claude/agents/<name>.md (flat)
+#                  commands: ~/.claude/commands/<name>.md (flat)
+#                  skills:   ~/.claude/skills/<name>/SKILL.md
+#                  rules:    ~/.claude/rules/<name>.md (flat) + @-imports in ~/.claude/CLAUDE.md
 #   Copilot      — agents: <home>/.copilot/agents/<name>.md (flat)
 #                  skills: <home>/.copilot/skills/<name>/<name>.md
 #   Kiro         — agents: <home>/.kiro/agents/<name>.md (flat) + <name>.json
@@ -25,7 +27,9 @@ set -euo pipefail
 
 REPO_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 AGENTS_DIR="$REPO_DIR/agents"
+COMMANDS_DIR="$REPO_DIR/commands"
 SKILLS_DIR="$REPO_DIR/skills"
+RULES_DIR="$REPO_DIR/rules"
 
 BOLD="\033[1m"
 GREEN="\033[0;32m"
@@ -92,9 +96,19 @@ find_agents() {
   find "$AGENTS_DIR" -name "*.md" ! -name "README.md" -print0 | sort -z
 }
 
+# Find all command .md files, sorted.
+find_commands() {
+  find "$COMMANDS_DIR" -name "*.md" -print0 | sort -z
+}
+
 # Find all skill SKILL.md files, sorted.
 find_skills() {
   find "$SKILLS_DIR" -name "SKILL.md" -print0 | sort -z
+}
+
+# Find all rule .md files (exclude README.md), sorted.
+find_rules() {
+  find "$RULES_DIR" -maxdepth 1 -name "*.md" ! -name "README.md" -print0 | sort -z
 }
 
 # Copy an agent file to dest, injecting minimal frontmatter if the source
@@ -127,11 +141,56 @@ write_claude_skill() {
 }
 
 # -----------------------------------------------------------------------------
+# Claude Code — rules
+# Copies rules/*.md to $home_dir/rules/ and idempotently appends @-import lines
+# to $home_dir/CLAUDE.md so Claude Code auto-loads them on every session start.
+# -----------------------------------------------------------------------------
+install_rules_claude() {
+  local home_dir="$1"
+  local rules_out="$home_dir/rules"
+  local claude_md="$home_dir/CLAUDE.md"
+
+  header "Rules  →  $rules_out"
+  mkdir -p "$rules_out"
+
+  # Create CLAUDE.md if it does not exist yet.
+  if [[ ! -f "$claude_md" ]]; then
+    touch "$claude_md"
+    info "Created $claude_md"
+  fi
+
+  local rcount=0
+  while IFS= read -r -d '' f; do
+    local rule_name
+    rule_name=$(basename "$f")
+
+    # Copy the rule file.
+    cp "$f" "$rules_out/$rule_name"
+
+    # Build the import line using the canonical ~/.claude/rules/ path so the
+    # reference works regardless of where $home_dir is on any given machine.
+    local import_line="@~/.claude/rules/${rule_name}"
+
+    # Append the import line only if it is not already present in CLAUDE.md.
+    if grep -qF "$import_line" "$claude_md"; then
+      info "  ${rule_name%.md}  (already imported, skipped)"
+    else
+      printf '\n%s\n' "$import_line" >> "$claude_md"
+      success "  ${rule_name%.md}"
+    fi
+
+    rcount=$(( rcount + 1 ))
+  done < <(find_rules)
+  info "$rcount rules installed"
+}
+
+# -----------------------------------------------------------------------------
 # Claude Code
 # -----------------------------------------------------------------------------
 install_claude() {
   local home_dir="$1"
   local agents_out="$home_dir/agents"
+  local commands_out="$home_dir/commands"
   local skills_out="$home_dir/skills"
 
   header "Agents  →  $agents_out"
@@ -147,6 +206,19 @@ install_claude() {
   done < <(find_agents)
   info "$count agents installed"
 
+  header "Commands  →  $commands_out"
+  mkdir -p "$commands_out"
+
+  local ccount=0
+  while IFS= read -r -d '' f; do
+    local cmd_name
+    cmd_name=$(basename "$f")
+    cp "$f" "$commands_out/$cmd_name"
+    success "  ${cmd_name%.md}"
+    ccount=$(( ccount + 1 ))
+  done < <(find_commands)
+  info "$ccount commands installed"
+
   header "Skills  →  $skills_out"
   mkdir -p "$skills_out"
 
@@ -160,6 +232,8 @@ install_claude() {
     scount=$(( scount + 1 ))
   done < <(find_skills)
   info "$scount skills installed"
+
+  install_rules_claude "$home_dir"
 }
 
 # -----------------------------------------------------------------------------
