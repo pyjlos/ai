@@ -1,0 +1,11 @@
+# Pipeline and session artifacts — tracked structure, not content
+outputs/handoffs/*.md
+outputs/pipeline/*/
+
+# Keep the directory structure
+!outputs/handoffs/.gitkeep
+!outputs/pipeline/.gitkeep
+
+# Local overrides
+*.local.md
+.DS_Store
