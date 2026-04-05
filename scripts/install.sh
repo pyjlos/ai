@@ -6,14 +6,18 @@
 # chosen AI tool: Claude Code, GitHub Copilot, or Amazon Q / Kiro.
 #
 # Each tool has different conventions:
-#   Claude Code  — agents:   ~/.claude/agents/<name>.md (flat)
-#                  commands: ~/.claude/commands/<name>.md (flat)
+#   Claude Code  — agents:   ~/.claude/agents/<name>.md
+#                  commands: ~/.claude/commands/<name>.md
+#                  rules:    ~/.claude/rules/<name>.md + @-imports in ~/.claude/CLAUDE.md
 #                  skills:   ~/.claude/skills/<name>/SKILL.md
-#                  rules:    ~/.claude/rules/<name>.md (flat) + @-imports in ~/.claude/CLAUDE.md
-#   Copilot      — agents: <home>/.copilot/agents/<name>.md (flat)
-#                  skills: <home>/.copilot/skills/<name>/<name>.md
-#   Kiro         — agents: <home>/.kiro/agents/<name>.md (flat) + <name>.json
-#                  skills: <home>/.kiro/skills/<name>/SKILL.md
+#   Copilot      — agents:   <home>/.copilot/agents/<name>.md
+#                  commands: <home>/.copilot/prompts/<name>.prompt.md  (VS Code slash cmds)
+#                  rules:    <home>/.copilot/instructions/<name>.instructions.md
+#                  skills:   <home>/.copilot/skills/<name>/SKILL.md
+#   Kiro         — agents:   <home>/.kiro/agents/<name>.md + <name>.json sidecar
+#                  rules:    <home>/.kiro/steering/<name>.md (inclusion: always)
+#                  skills:   <home>/.kiro/skills/<name>/SKILL.md
+#                  commands: no equivalent — skipped
 #
 # Usage (interactive):
 #   bash scripts/install.sh
@@ -96,9 +100,9 @@ find_agents() {
   find "$AGENTS_DIR" -name "*.md" ! -name "README.md" -print0 | sort -z
 }
 
-# Find all command .md files, sorted.
+# Find all command .md files (exclude README.md), sorted.
 find_commands() {
-  find "$COMMANDS_DIR" -name "*.md" -print0 | sort -z
+  find "$COMMANDS_DIR" -name "*.md" ! -name "README.md" -print0 | sort -z
 }
 
 # Find all skill SKILL.md files, sorted.
@@ -238,12 +242,16 @@ install_claude() {
 
 # -----------------------------------------------------------------------------
 # GitHub Copilot
-# Agents: <home>/.copilot/agents/<name>.md
-# Skills: <home>/.copilot/skills/<name>/<name>.md  (filename = skill name)
+# Agents:   <home>/.copilot/agents/<name>.md
+# Commands: <home>/.copilot/prompts/<name>.prompt.md  (VS Code slash commands)
+# Rules:    <home>/.copilot/instructions/<name>.instructions.md  (always-on)
+# Skills:   <home>/.copilot/skills/<name>/SKILL.md
 # -----------------------------------------------------------------------------
 install_copilot() {
   local home_dir="$1"
   local agents_out="$home_dir/.copilot/agents"
+  local commands_out="$home_dir/.copilot/prompts"
+  local rules_out="$home_dir/.copilot/instructions"
   local skills_out="$home_dir/.copilot/skills"
 
   header "Agents  →  $agents_out"
@@ -259,6 +267,35 @@ install_copilot() {
   done < <(find_agents)
   info "$count agents installed"
 
+  # Commands → .prompt.md files (surfaced as VS Code slash commands)
+  header "Commands  →  $commands_out"
+  mkdir -p "$commands_out"
+
+  local ccount=0
+  while IFS= read -r -d '' f; do
+    local stem
+    stem=$(basename "$f" .md)
+    cp "$f" "$commands_out/${stem}.prompt.md"
+    success "  $stem"
+    ccount=$(( ccount + 1 ))
+  done < <(find_commands)
+  info "$ccount commands installed (VS Code only — not supported in gh copilot CLI)"
+
+  # Rules → .instructions.md files (always-on at user scope, no frontmatter needed)
+  header "Rules  →  $rules_out"
+  mkdir -p "$rules_out"
+
+  local rcount=0
+  while IFS= read -r -d '' f; do
+    local stem
+    stem=$(basename "$f" .md)
+    cp "$f" "$rules_out/${stem}.instructions.md"
+    success "  $stem"
+    rcount=$(( rcount + 1 ))
+  done < <(find_rules)
+  info "$rcount rules installed"
+
+  # Skills → SKILL.md (open standard, same as Claude Code and Kiro)
   header "Skills  →  $skills_out"
   mkdir -p "$skills_out"
 
@@ -267,8 +304,7 @@ install_copilot() {
     local skill_name
     skill_name=$(basename "$(dirname "$f")")
     mkdir -p "$skills_out/$skill_name"
-    # Copilot convention: filename matches the skill name, not SKILL.md
-    cp "$f" "$skills_out/$skill_name/${skill_name}.md"
+    cp "$f" "$skills_out/$skill_name/SKILL.md"
     success "  $skill_name"
     scount=$(( scount + 1 ))
   done < <(find_skills)
@@ -277,12 +313,32 @@ install_copilot() {
 
 # -----------------------------------------------------------------------------
 # Amazon Q / Kiro
-# Agents: <home>/.kiro/agents/<name>.md  (plus a <name>.json sidecar)
-# Skills: <home>/.kiro/skills/<name>/SKILL.md
+# Agents:   <home>/.kiro/agents/<name>.md + <name>.json sidecar
+# Rules:    <home>/.kiro/steering/<name>.md  (inclusion: always)
+# Skills:   <home>/.kiro/skills/<name>/SKILL.md
+# Commands: no equivalent — Kiro hooks are JSON and are not compatible with
+#           markdown command files; skipped.
 # -----------------------------------------------------------------------------
+
+# Copy a rule file to Kiro steering, injecting `inclusion: always` frontmatter
+# if the file does not already have it (files without frontmatter default to
+# always-on in Kiro CLI, but explicit frontmatter makes the intent clear).
+write_kiro_steering() {
+  local src="$1" dest="$2"
+  if grep -q '^inclusion:' "$src"; then
+    cp "$src" "$dest"
+  else
+    # Prepend an `inclusion: always` frontmatter block before the file body.
+    { printf -- '---\ninclusion: always\n---\n\n'
+      cat "$src"
+    } > "$dest"
+  fi
+}
+
 install_kiro() {
   local home_dir="$1"
   local agents_out="$home_dir/.kiro/agents"
+  local rules_out="$home_dir/.kiro/steering"
   local skills_out="$home_dir/.kiro/skills"
 
   header "Agents  →  $agents_out"
@@ -315,6 +371,21 @@ JSON
     count=$(( count + 1 ))
   done < <(find_agents)
   info "$count agents installed (with JSON sidecars)"
+
+  # Rules → steering files with `inclusion: always`
+  header "Rules  →  $rules_out"
+  mkdir -p "$rules_out"
+
+  local rcount=0
+  while IFS= read -r -d '' f; do
+    local rule_name
+    rule_name=$(basename "$f")
+    write_kiro_steering "$f" "$rules_out/$rule_name"
+    success "  ${rule_name%.md}"
+    rcount=$(( rcount + 1 ))
+  done < <(find_rules)
+  info "$rcount rules installed"
+  warn "Commands skipped — Kiro hooks are JSON and not compatible with markdown command files"
 
   header "Skills  →  $skills_out"
   mkdir -p "$skills_out"
