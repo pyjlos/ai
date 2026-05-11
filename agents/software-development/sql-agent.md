@@ -1,6 +1,6 @@
 ---
 name: sql-agent
-description: Use for SQL query writing, schema design, performance optimization, migrations, and database best practices with a PostgreSQL primary focus
+description: Use for SQL engineering tasks — designing new schemas, writing application queries, authoring migrations, tuning queries from EXPLAIN/execution plans, and PostgreSQL best practices. For operating on a live production database (DML on real data, safe UPDATE/DELETE patterns, exploring current DB state), use `database-admin` instead.
 model: claude-sonnet-4-6
 ---
 

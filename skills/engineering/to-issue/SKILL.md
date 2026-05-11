@@ -1,13 +1,24 @@
 ---
-name: to-issues
+name: to-issue
 description: Break a plan, spec, or PRD into independently-grabbable issues on the project issue tracker using tracer-bullet vertical slices. Use when user wants to convert a plan into issues, create implementation tickets, or break down work into issues.
 ---
 
-# To Issues
+# To Issue
 
 Break a plan into independently-grabbable issues using vertical slices (tracer bullets).
 
-The issue tracker and triage label vocabulary should have been provided to you — run `/setup-matt-pocock-skills` if not.
+If issue-tracker context (which tracker, triage labels, workflow) is not already in the conversation, ask the user to describe it before proceeding.
+
+## When NOT to use
+
+- The work is a single, atomic change that doesn't decompose — just open one issue manually.
+- No plan or spec exists yet — produce one first (`grill-with-docs` or `adr-research`), then return.
+- The user wants implementation, not tracking — go straight to `tdd` or the relevant language agent.
+
+## Related skills
+
+- `grill-with-docs` — produces the plan this skill consumes.
+- `adr-research` — when slices include unresolved architectural decisions, link to the ADR instead of inlining the analysis.
 
 ## Process
 

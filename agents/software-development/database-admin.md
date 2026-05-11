@@ -1,6 +1,6 @@
 ---
 name: database-admin
-description: Use for database administration, safe SQL operations, query optimization, exploring database state, writing efficient queries, and production database best practices
+description: Use when touching a live or production database — running DML on real data, exploring current DB state, writing safe UPDATE/DELETE patterns, planning backup-before-change steps, or when reversibility and transaction discipline are the primary concern. For greenfield schema design, migrations, or query engineering use `sql-agent` instead.
 model: claude-sonnet-4-6
 ---
 

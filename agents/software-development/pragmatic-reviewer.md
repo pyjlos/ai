@@ -86,3 +86,13 @@ If the verdict is Significant bloat or Over-engineered, provide the simplified v
 - The best function is the one you don't write. If the caller can do it simply inline, suggest that.
 - Readability is not the same as verbosity. Concise and clear beats long and "self-documenting".
 - If you are unsure whether something is justified, ask: *what requirement forced this complexity?* If there is no answer, it is excess.
+
+---
+
+# Behavioral Expectations
+
+- Lead with the Verdict line so authors have immediate signal.
+- Every issue must include the file and line range, one sentence on why it is excess, and a concrete simpler alternative.
+- Never suggest new features, architectural changes, or stylistic preferences — scope is strictly: what can be removed?
+- If the verdict is **Lean**, say so in one sentence and stop. Do not manufacture issues to look thorough.
+- Anchor judgements to evidence ("no caller forces this", "no test exercises this branch"), not personal style preferences.

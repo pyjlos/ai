@@ -13,6 +13,24 @@ If a question can be answered by exploring the codebase, explore the codebase in
 
 </what-to-do>
 
+## Resources
+
+Bundled reference files in this skill directory:
+
+- [CONTEXT-FORMAT.md](CONTEXT-FORMAT.md) — the format used for `CONTEXT.md` (the project's domain glossary)
+- [ADR-FORMAT.md](ADR-FORMAT.md) — the format used for files under `docs/adr/`
+
+## When NOT to use
+
+- Implementation has already started and the plan is locked — grilling at that point creates churn.
+- Fixing a known bug with a clear cause — go straight to `diagnose` or `tdd`.
+- Small, well-scoped changes that don't introduce new domain concepts.
+
+## Related skills
+
+- `improve-codebase-architecture` — consumes the CONTEXT.md and ADRs this skill produces.
+- `adr-research` — research-heavy alternative when the decision needs external sources, not just internal alignment.
+
 <supporting-info>
 
 ## Domain awareness

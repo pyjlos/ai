@@ -7,6 +7,30 @@ description: Find deepening opportunities in a codebase, informed by the domain 
 
 Surface architectural friction and propose **deepening opportunities** — refactors that turn shallow modules into deep ones. The aim is testability and AI-navigability.
 
+## Resources
+
+Bundled reference files in this skill directory:
+
+- [LANGUAGE.md](LANGUAGE.md) — full glossary of terms used by this skill
+- [DEEPENING.md](DEEPENING.md) — the deepening pattern catalog with concrete examples
+- [INTERFACE-DESIGN.md](INTERFACE-DESIGN.md) — what belongs on an interface vs. behind it
+
+Cross-skill references (installed as siblings under `~/.claude/skills/`):
+
+- [../grill-with-docs/CONTEXT-FORMAT.md](../grill-with-docs/CONTEXT-FORMAT.md) — the CONTEXT.md format
+- [../grill-with-docs/ADR-FORMAT.md](../grill-with-docs/ADR-FORMAT.md) — the ADR format this skill respects
+
+## When NOT to use
+
+- Greenfield work where no architecture exists yet — design from first principles, don't search for friction in code that isn't there.
+- One-line bug fixes or feature additions that don't warrant a refactor pass.
+- Codebases without `CONTEXT.md` or `docs/adr/` — this skill is anchored in those documents; without them, fall back to `pragmatic-reviewer` or `solution-architect`.
+
+## Related skills
+
+- `grill-with-docs` — produces / updates the CONTEXT.md and ADRs this skill consumes.
+- `pragmatic-reviewer` — when the goal is *remove bloat*, not *deepen modules*.
+
 ## Glossary
 
 Use these terms exactly in every suggestion. Consistent language is the point — don't drift into "component," "service," "API," or "boundary." Full definitions in [LANGUAGE.md](LANGUAGE.md).

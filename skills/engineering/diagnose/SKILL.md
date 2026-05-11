@@ -9,6 +9,17 @@ A discipline for hard bugs. Skip phases only when explicitly justified.
 
 When exploring the codebase, use the project's domain glossary to get a clear mental model of the relevant modules, and check ADRs in the area you're touching.
 
+## When NOT to use
+
+- Pure "how do I read this stack trace in Python/TS/Go" questions — use the `debugger` agent's language references instead.
+- The bug is already reproduced and the fix is obvious — just fix it.
+- You haven't yet read the error message or attempted to run the failing case — do that first; this skill is for bugs that *resist* surface-level investigation.
+
+## Related skills
+
+- `debugger` (agent) — language-specific reference for stack traces, profilers, and tooling. Pair: invoke this skill to run the loop, consult the agent for syntax of `pprof` / `py-spy` / `node --inspect`.
+- `tdd` — once the bug is reproduced, the failing test from Phase 1 becomes the start of a red-green-refactor cycle.
+
 ## Phase 1 — Build a feedback loop
 
 **This is the skill.** Everything else is mechanical. If you have a fast, deterministic, agent-runnable pass/fail signal for the bug, you will find the cause — bisection, hypothesis-testing, and instrumentation all just consume that signal. If you don't have one, no amount of staring at code will save you.

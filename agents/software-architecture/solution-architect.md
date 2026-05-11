@@ -1,6 +1,6 @@
 ---
 name: solution-architect
-description: Use for system design, architecture trade-offs, technology selection, and cross-cutting architectural decisions
+description: Use for significant system design and architecture decisions — decomposing a new system, evaluating build-vs-buy, selecting data stores or messaging systems, designing integration patterns, or producing ADRs. Not for routine feature-level implementation planning; for that, use the relevant language or domain agent directly.
 model: claude-sonnet-4-6
 ---
 

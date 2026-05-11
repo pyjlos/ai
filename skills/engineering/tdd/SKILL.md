@@ -5,6 +5,27 @@ description: Test-driven development with red-green-refactor loop. Use when user
 
 # Test-Driven Development
 
+## Resources
+
+Bundled reference files in this skill directory:
+
+- [tests.md](tests.md) — examples of good vs. bad tests
+- [mocking.md](mocking.md) — when and how to mock at boundaries
+- [deep-modules.md](deep-modules.md) — designing modules with high interface depth
+- [interface-design.md](interface-design.md) — designing interfaces that survive refactor
+- [refactoring.md](refactoring.md) — the refactor phase of red-green-refactor
+
+## When NOT to use
+
+- Pure prototyping or throwaway spikes where the design is still in flux — write code first, test later.
+- Tasks where the test harness doesn't yet exist; bootstrap the harness first, then come back to TDD.
+- Refactors with no behavior change — use the existing test suite as the safety net instead.
+
+## Related skills
+
+- `diagnose` — when you need to first reproduce a bug; once reproduced, use TDD to drive the fix.
+- `improve-codebase-architecture` — once tests exist, use this skill to deepen the modules they cover.
+
 ## Philosophy
 
 **Core principle**: Tests should verify behavior through public interfaces, not implementation details. Code can change entirely; tests shouldn't.

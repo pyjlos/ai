@@ -228,10 +228,16 @@ install_claude() {
 
   local scount=0
   while IFS= read -r -d '' f; do
-    local skill_name
-    skill_name=$(basename "$(dirname "$f")")
+    local skill_name skill_src_dir
+    skill_src_dir="$(dirname "$f")"
+    skill_name=$(basename "$skill_src_dir")
     mkdir -p "$skills_out/$skill_name"
     write_claude_skill "$f" "$skills_out/$skill_name/SKILL.md"
+    # Copy any bundled resource files (sibling .md files referenced by SKILL.md)
+    find "$skill_src_dir" -maxdepth 1 -type f ! -name "SKILL.md" -print0 \
+      | while IFS= read -r -d '' extra; do
+          cp "$extra" "$skills_out/$skill_name/$(basename "$extra")"
+        done
     success "  $skill_name"
     scount=$(( scount + 1 ))
   done < <(find_skills)
@@ -301,10 +307,15 @@ install_copilot() {
 
   local scount=0
   while IFS= read -r -d '' f; do
-    local skill_name
-    skill_name=$(basename "$(dirname "$f")")
+    local skill_name skill_src_dir
+    skill_src_dir="$(dirname "$f")"
+    skill_name=$(basename "$skill_src_dir")
     mkdir -p "$skills_out/$skill_name"
     cp "$f" "$skills_out/$skill_name/SKILL.md"
+    find "$skill_src_dir" -maxdepth 1 -type f ! -name "SKILL.md" -print0 \
+      | while IFS= read -r -d '' extra; do
+          cp "$extra" "$skills_out/$skill_name/$(basename "$extra")"
+        done
     success "  $skill_name"
     scount=$(( scount + 1 ))
   done < <(find_skills)
@@ -392,10 +403,15 @@ JSON
 
   local scount=0
   while IFS= read -r -d '' f; do
-    local skill_name
-    skill_name=$(basename "$(dirname "$f")")
+    local skill_name skill_src_dir
+    skill_src_dir="$(dirname "$f")"
+    skill_name=$(basename "$skill_src_dir")
     mkdir -p "$skills_out/$skill_name"
     cp "$f" "$skills_out/$skill_name/SKILL.md"
+    find "$skill_src_dir" -maxdepth 1 -type f ! -name "SKILL.md" -print0 \
+      | while IFS= read -r -d '' extra; do
+          cp "$extra" "$skills_out/$skill_name/$(basename "$extra")"
+        done
     success "  $skill_name"
     scount=$(( scount + 1 ))
   done < <(find_skills)

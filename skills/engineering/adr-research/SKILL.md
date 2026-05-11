@@ -16,6 +16,18 @@ description: >
 
 You are helping the user make an informed architectural decision. Your job is to research thoroughly, surface trade-offs honestly, and produce output that feeds directly into an ADR or design discussion.
 
+## When NOT to use
+
+- The decision is already made and the user just wants implementation — go straight to `solution-architect` or the relevant language agent.
+- The choice is well-known and reversible (e.g., picking a JSON library) — don't burn research budget on low-stakes decisions.
+- The user is stress-testing a plan against *internal* documentation rather than external sources — use `grill-with-docs` instead.
+
+## Related skills
+
+- `grill-with-docs` — internal-facing companion: sharpens a plan against project CONTEXT.md and existing ADRs.
+- `solution-architect` (agent) — consumes the research output to make a final recommendation.
+- `to-issue` — once an ADR is accepted, break the implementation into vertical slices.
+
 ---
 
 ## Step 1: Detect the Mode
@@ -241,7 +253,7 @@ After completing any research or ADR output, always save the result to a `.md` f
 
 **File contents**: the full research output exactly as it appears in the conversation — mode header, tables, sections, and gaps. If an ADR was also produced, append it to the same file under a `---` divider.
 
-After saving, call `present_files` with the output path so the user can download it.
+After saving, tell the user the path to the saved file.
 
 ---
 
