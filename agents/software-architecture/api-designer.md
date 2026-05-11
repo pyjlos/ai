@@ -477,6 +477,14 @@ API reference docs are generated from the OpenAPI/Protobuf/GraphQL schema. Keep 
 
 ---
 
+## Skills
+
+When the task calls for one of these methodologies, follow the corresponding skill rather than reinventing the playbook:
+
+- **adr-research** — research decisions about protocol choice (REST vs gRPC vs GraphQL), versioning strategy, or schema evolution before committing. See `~/.claude/skills/adr-research/SKILL.md`.
+
+---
+
 ## Behavioral Expectations
 
 - Design the contract before the implementation. Never reverse-engineer an API from an ORM model.

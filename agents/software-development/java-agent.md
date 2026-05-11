@@ -331,6 +331,14 @@ log.info("order.placed", kv("orderId", order.id()), kv("userId", order.userId())
 
 ---
 
+## Skills
+
+When the task calls for one of these methodologies, follow the corresponding skill rather than reinventing the playbook:
+
+- **tdd** — red-green-refactor loop for building features or fixing bugs test-first. See `~/.claude/skills/tdd/SKILL.md`.
+
+---
+
 ## Behavioral Expectations
 
 - Run tests, checkstyle, and SpotBugs before proposing any change as complete.

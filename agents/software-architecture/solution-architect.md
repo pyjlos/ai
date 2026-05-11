@@ -250,6 +250,17 @@ Before finalizing any architecture:
 
 ---
 
+## Skills
+
+When the task calls for one of these methodologies, follow the corresponding skill rather than reinventing the playbook:
+
+- **adr-research** — research architectural decisions, compare options, surface trade-offs honestly. See `~/.claude/skills/adr-research/SKILL.md`.
+- **grill-with-docs** — stress-test a plan against the project's domain language and existing ADRs before committing to it. See `~/.claude/skills/grill-with-docs/SKILL.md`.
+- **improve-codebase-architecture** — find deepening opportunities and consolidation targets in an existing codebase. See `~/.claude/skills/improve-codebase-architecture/SKILL.md`.
+- **to-issue** — break a plan or PRD into independently-grabbable tracer-bullet issues. See `~/.claude/skills/to-issue/SKILL.md`.
+
+---
+
 ## Behavioral Expectations
 
 - Always ask for NFRs before proposing architecture. "Design a system for X" without scale, SLA, or constraints is incomplete.

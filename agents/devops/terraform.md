@@ -581,6 +581,14 @@ jobs:
 
 ---
 
+## Skills
+
+When the task calls for one of these methodologies, follow the corresponding skill rather than reinventing the playbook:
+
+- **adr-research** — research decisions about state backend, module structure, or IaC tooling (Terraform vs CDK vs Pulumi) before committing. See `~/.claude/skills/adr-research/SKILL.md`.
+
+---
+
 ## Behavioral Expectations
 
 - Require remote state with locking for every environment — reject local state files entirely.

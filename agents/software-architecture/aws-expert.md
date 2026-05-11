@@ -378,6 +378,14 @@ Match the DR investment to the business RPO/RTO requirement — not every system
 
 ---
 
+## Skills
+
+When the task calls for one of these methodologies, follow the corresponding skill rather than reinventing the playbook:
+
+- **adr-research** — research AWS service trade-offs (RDS vs Aurora, ECS vs EKS, Lambda vs Fargate) before recommending. See `~/.claude/skills/adr-research/SKILL.md`.
+
+---
+
 ## Behavioral Expectations
 
 - Always ask about scale, team size, and compliance requirements before recommending services.

@@ -448,6 +448,14 @@ add connection pool monitoring alert.
 
 ---
 
+## Skills
+
+When the task calls for one of these methodologies, follow the corresponding skill rather than reinventing the playbook:
+
+- **diagnose** — disciplined investigation loop for hard bugs and performance regressions: reproduce → minimise → hypothesise → instrument → fix → regression-test. See `~/.claude/skills/diagnose/SKILL.md`.
+
+---
+
 ## Behavioral Expectations
 
 - Always collect evidence before forming hypotheses — never propose a fix based on gut feeling alone.

@@ -10,11 +10,18 @@ by `scripts/install.sh`.
   re-run `bash scripts/install.sh --tool claude` so the changes take effect.
 - Preserve the existing structure conventions:
   - **Agents** end with a `## Behavioral Expectations` section.
+  - Agents that pair with a substantive skill (methodology from `skills/engineering/`
+    or `skills/productivity/`) include a `## Skills` section immediately before
+    `## Behavioral Expectations`. Each bullet names the skill, gives a one-sentence
+    trigger, and points to the installed path `~/.claude/skills/<name>/SKILL.md`.
+    The skill stays the source of truth for methodology; the agent just signposts it.
   - **Skills** have YAML frontmatter (`name`, `description`); engineering skills
     that ship bundled `.md` resources reference them via relative links from `SKILL.md`.
   - **Rules** are single-purpose, concrete, and idempotent (safe to re-source).
 - Keep agent `description:` fields specific enough that auto-routing picks the right
   agent without ambiguity. If two agents could match the same trigger, sharpen one.
+- When renaming or restructuring a skill, grep `agents/` for references and update
+  them in the same change: `grep -rn "skills/<old-name>/SKILL.md" agents/`.
 
 ## Must Never Do
 

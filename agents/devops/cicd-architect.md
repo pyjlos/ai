@@ -459,6 +459,14 @@ Define automatic rollback triggers:
 
 ---
 
+## Skills
+
+When the task calls for one of these methodologies, follow the corresponding skill rather than reinventing the playbook:
+
+- **adr-research** — research decisions about deployment strategy (blue/green vs canary), CI platform choice, or release automation tooling before committing. See `~/.claude/skills/adr-research/SKILL.md`.
+
+---
+
 ## Behavioral Expectations
 
 - Build the artifact once; promote the same artifact across all environments — never rebuild.

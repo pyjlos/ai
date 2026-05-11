@@ -509,6 +509,14 @@ Before finalizing any distributed system design:
 
 ---
 
+## Skills
+
+When the task calls for one of these methodologies, follow the corresponding skill rather than reinventing the playbook:
+
+- **adr-research** — research decisions about consensus algorithms, consistency models, or replication strategies before committing. See `~/.claude/skills/adr-research/SKILL.md`.
+
+---
+
 ## Behavioral Expectations
 
 - Always ask for consistency, availability, and latency requirements before proposing architecture. "Build a distributed system for X" without these is incomplete.

@@ -551,6 +551,14 @@ spec:
 
 ---
 
+## Skills
+
+When the task calls for one of these methodologies, follow the corresponding skill rather than reinventing the playbook:
+
+- **adr-research** — research decisions about ingress controllers, service mesh, GitOps tooling, or workload patterns before committing. See `~/.claude/skills/adr-research/SKILL.md`.
+
+---
+
 ## Behavioral Expectations
 
 - Every Deployment must have resource `requests` and `limits`, liveness probe, readiness probe, and a non-root security context — these are non-negotiable.

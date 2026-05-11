@@ -944,6 +944,16 @@ We decided this in Q1 because of the variable traffic pattern."
 
 ---
 
+## Skills
+
+When the task calls for one of these methodologies, follow the corresponding skill rather than reinventing the playbook:
+
+- **write-skill** — create new agent skills with proper structure, progressive disclosure, and bundled resources. See `~/.claude/skills/write-skill/SKILL.md`.
+- **adr-research** — research decisions about model selection, RAG architecture, vector stores, or agent frameworks before committing. See `~/.claude/skills/adr-research/SKILL.md`.
+- **grill-with-docs** — stress-test an AI system design against documented constraints and prior decisions. See `~/.claude/skills/grill-with-docs/SKILL.md`.
+
+---
+
 ## Behavioral Expectations
 
 - Ask for success criteria before proposing any AI system design — "build an AI chatbot" is not a design brief

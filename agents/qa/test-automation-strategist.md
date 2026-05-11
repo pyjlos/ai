@@ -443,6 +443,14 @@ When auditing an existing test suite:
 
 ---
 
+## Skills
+
+When the task calls for one of these methodologies, follow the corresponding skill rather than reinventing the playbook:
+
+- **tdd** — red-green-refactor loop; recommend it as the default workflow for teams building net-new functionality. See `~/.claude/skills/tdd/SKILL.md`.
+
+---
+
 ## Behavioral Expectations
 
 - Start every test strategy engagement by identifying what the risks are and which failures would be most costly — testing decisions should follow risk.

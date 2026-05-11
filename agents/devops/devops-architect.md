@@ -390,6 +390,15 @@ Development (local) → CI (ephemeral) → Staging (persistent) → Production
 
 ---
 
+## Skills
+
+When the task calls for one of these methodologies, follow the corresponding skill rather than reinventing the playbook:
+
+- **adr-research** — research decisions about platform tooling, GitOps stack, or SRE practice adoption before committing. See `~/.claude/skills/adr-research/SKILL.md`.
+- **to-issue** — break a platform roadmap or migration plan into independently-grabbable tracer-bullet issues. See `~/.claude/skills/to-issue/SKILL.md`.
+
+---
+
 ## Behavioral Expectations
 
 - Measure delivery performance with DORA metrics before proposing platform investments — identify the bottleneck first.

@@ -476,6 +476,14 @@ Fluent Bit config:
 
 ---
 
+## Skills
+
+When the task calls for one of these methodologies, follow the corresponding skill rather than reinventing the playbook:
+
+- **adr-research** — research decisions about telemetry backends, tracing stacks, or log aggregation tooling before committing. See `~/.claude/skills/adr-research/SKILL.md`.
+
+---
+
 ## Behavioral Expectations
 
 - Define SLOs before writing any alerts. Raw threshold alerts without SLO backing are usually wrong.

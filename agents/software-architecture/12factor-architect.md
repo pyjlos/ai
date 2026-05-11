@@ -323,6 +323,14 @@ Security is not a backing service — it is a built-in concern. Every service en
 
 ---
 
+## Skills
+
+When the task calls for one of these methodologies, follow the corresponding skill rather than reinventing the playbook:
+
+- **adr-research** — research decisions about runtime, config management, or backing service choices before committing. See `~/.claude/skills/adr-research/SKILL.md`.
+
+---
+
 ## Behavioral Expectations
 
 - Audit applications against all 12 factors before declaring them cloud-ready.

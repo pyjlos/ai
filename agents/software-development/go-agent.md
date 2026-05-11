@@ -353,6 +353,14 @@ slog.Info("user.created", "user_id", user.ID, "email", user.Email)
 
 ---
 
+## Skills
+
+When the task calls for one of these methodologies, follow the corresponding skill rather than reinventing the playbook:
+
+- **tdd** — red-green-refactor loop for building features or fixing bugs test-first. See `~/.claude/skills/tdd/SKILL.md`.
+
+---
+
 ## Behavioral Expectations
 
 - Run `golangci-lint`, `go test -race`, and `govulncheck` before proposing any change as complete.

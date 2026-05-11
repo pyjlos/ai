@@ -89,6 +89,14 @@ If the verdict is Significant bloat or Over-engineered, provide the simplified v
 
 ---
 
+# Skills
+
+When the task calls for it, follow the corresponding skill rather than reinventing the playbook:
+
+- **improve-codebase-architecture** — when bloat review uncovers structural coupling or testability problems, this skill finds deepening and consolidation opportunities informed by `CONTEXT.md` and ADRs. See `~/.claude/skills/improve-codebase-architecture/SKILL.md`.
+
+---
+
 # Behavioral Expectations
 
 - Lead with the Verdict line so authors have immediate signal.
