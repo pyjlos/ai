@@ -27,16 +27,31 @@ by `scripts/install.sh`.
 ## Layout
 
 ```
-agents/         — agent persona files, grouped by domain
-skills/         — skills (SKILL.md per directory; siblings are bundled resources)
-  agents/       — thin delegation wrappers that hand off to the same-named agent
-  engineering/  — substantive skills with methodology and bundled .md resources
-  productivity/ — workflow / pipeline / handoff skills
-commands/       — slash commands (Claude Code)
-rules/          — global rules imported into ~/.claude/CLAUDE.md
-scripts/        — install.sh and helpers
-outputs/        — in-progress handoffs and pipeline artifacts (gitignored where appropriate)
+agents/             — agent persona files, grouped by domain
+skills/             — skills (SKILL.md per directory; siblings are bundled resources)
+  agents/           — thin delegation wrappers that hand off to the same-named agent
+  engineering/      — substantive skills with methodology and bundled .md resources
+  productivity/     — workflow / pipeline / handoff skills
+commands/           — slash commands (Claude Code)
+rules/              — global rules imported into ~/.claude/CLAUDE.md
+claude/
+  settings.json     — canonical Claude Code config (permissions, hooks, statusline)
+scripts/
+  install.sh        — installer (Claude / Copilot / Kiro)
+  statusline.sh     — Claude Code statusline (installed to ~/.claude/statusline.sh)
+  hooks/            — PreToolUse hooks (installed to ~/.claude/hooks/)
+outputs/            — in-progress handoffs and pipeline artifacts
 ```
+
+## Harness (Claude Code only)
+
+Running `bash scripts/install.sh --tool claude` installs the full harness:
+
+- **`~/.claude/settings.json`** — canonical config; existing file is backed up to `settings.json.bak` before overwrite.
+- **`~/.claude/hooks/*.sh`** — PreToolUse hooks: block writes to secret files, block edits under `~/.claude/`, block destructive git commands. Override the `~/.claude/` guard per-session with `export CLAUDE_ALLOW_HOME_EDITS=1`.
+- **`~/.claude/statusline.sh`** — shows `<cwd-tail>  ⎇ <branch>[*]  <model>`.
+
+Hooks require `jq` on the PATH. Install warns if jq is missing.
 
 ## Sync model
 

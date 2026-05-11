@@ -1,0 +1,71 @@
+{
+  "effortLevel": "high",
+  "permissions": {
+    "default": {
+      "read": {
+        "exclude": [
+          ".env",
+          ".env.*",
+          "*.key",
+          "*.pem",
+          "*.p12",
+          "*.pfx",
+          "id_rsa",
+          "id_ed25519",
+          ".aws/credentials",
+          ".ssh/**",
+          "**/secrets/**",
+          "**/.terraform/**"
+        ]
+      }
+    }
+  },
+  "safety": {
+    "blockList": {
+      "commands": [
+        "rm -rf /",
+        "rm -rf ~",
+        "rm -rf $HOME",
+        "rm -rf --no-preserve-root",
+        ":(){ :|:& };:",
+        "dd if=/dev/zero of=/dev/sda",
+        "mkfs",
+        "shred /dev/"
+      ]
+    },
+    "requireApproval": {
+      "commands": [
+        "git push --force",
+        "git push -f",
+        "git push --force-with-lease",
+        "git reset --hard origin",
+        "npm publish",
+        "yarn publish",
+        "pnpm publish",
+        "cargo publish",
+        "uv publish"
+      ]
+    }
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "~/.claude/statusline.sh"
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit|NotebookEdit",
+        "hooks": [
+          { "type": "command", "command": "~/.claude/hooks/block-secret-files.sh" },
+          { "type": "command", "command": "~/.claude/hooks/block-claude-config-writes.sh" }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          { "type": "command", "command": "~/.claude/hooks/git-safety.sh" }
+        ]
+      }
+    ]
+  }
+}

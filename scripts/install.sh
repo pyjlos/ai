@@ -34,6 +34,9 @@ AGENTS_DIR="$REPO_DIR/agents"
 COMMANDS_DIR="$REPO_DIR/commands"
 SKILLS_DIR="$REPO_DIR/skills"
 RULES_DIR="$REPO_DIR/rules"
+HOOKS_DIR="$REPO_DIR/scripts/hooks"
+CLAUDE_CONFIG_DIR="$REPO_DIR/claude"
+STATUSLINE_SRC="$REPO_DIR/scripts/statusline.sh"
 
 BOLD="\033[1m"
 GREEN="\033[0;32m"
@@ -145,6 +148,62 @@ write_claude_skill() {
 }
 
 # -----------------------------------------------------------------------------
+# Claude Code — harness (settings.json, hooks, statusline)
+# Installs:
+#   $home_dir/settings.json           (backed up to .bak before overwrite)
+#   $home_dir/hooks/*.sh              (chmod +x)
+#   $home_dir/statusline.sh           (chmod +x)
+# -----------------------------------------------------------------------------
+install_harness_claude() {
+  local home_dir="$1"
+  local hooks_out="$home_dir/hooks"
+  local settings_out="$home_dir/settings.json"
+  local statusline_out="$home_dir/statusline.sh"
+
+  if ! command -v jq >/dev/null 2>&1; then
+    warn "jq not found on PATH. Hooks parse JSON via jq — install jq for hooks to work."
+    warn "  macOS:  brew install jq"
+    warn "  Linux:  apt install jq  /  dnf install jq"
+  fi
+
+  header "Hooks  →  $hooks_out"
+  mkdir -p "$hooks_out"
+  local hcount=0
+  for f in "$HOOKS_DIR"/*.sh; do
+    [[ -e "$f" ]] || continue
+    local hook_name
+    hook_name=$(basename "$f")
+    cp "$f" "$hooks_out/$hook_name"
+    chmod +x "$hooks_out/$hook_name"
+    success "  $hook_name"
+    hcount=$(( hcount + 1 ))
+  done
+  info "$hcount hooks installed"
+
+  header "Statusline  →  $statusline_out"
+  if [[ -f "$STATUSLINE_SRC" ]]; then
+    cp "$STATUSLINE_SRC" "$statusline_out"
+    chmod +x "$statusline_out"
+    success "  statusline.sh"
+  else
+    warn "  $STATUSLINE_SRC not found, skipped"
+  fi
+
+  header "Settings  →  $settings_out"
+  local settings_src="$CLAUDE_CONFIG_DIR/settings.json"
+  if [[ ! -f "$settings_src" ]]; then
+    warn "  $settings_src not found, skipped"
+    return
+  fi
+  if [[ -f "$settings_out" ]] && ! cmp -s "$settings_src" "$settings_out"; then
+    cp "$settings_out" "$settings_out.bak"
+    info "  existing settings.json backed up to settings.json.bak"
+  fi
+  cp "$settings_src" "$settings_out"
+  success "  settings.json"
+}
+
+# -----------------------------------------------------------------------------
 # Claude Code — rules
 # Copies rules/*.md to $home_dir/rules/ and idempotently appends @-import lines
 # to $home_dir/CLAUDE.md so Claude Code auto-loads them on every session start.
@@ -244,6 +303,7 @@ install_claude() {
   info "$scount skills installed"
 
   install_rules_claude "$home_dir"
+  install_harness_claude "$home_dir"
 }
 
 # -----------------------------------------------------------------------------
