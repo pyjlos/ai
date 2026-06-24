@@ -13,6 +13,8 @@ Produce a handoff document (via `/handoff`) when:
 - You have made decisions whose rationale is not visible in the code
 - The work spans more than one phase of the workflow
 
+The 1-hour threshold from `workflow.md` and the phase-crossing threshold here are independent — apply whichever triggers first.
+
 Do not skip the handoff because the work "seems small." A missed handoff is the most common cause of regressions in resumed sessions.
 
 ---
@@ -36,26 +38,6 @@ A handoff that omits any of these is incomplete.
 ## When to produce a handoff mid-task
 
 If you discover during execution that the task is significantly larger than expected, stop, produce a handoff, and flag it to the user before continuing. Do not silently expand scope.
-
----
-
-## Agent pipeline handoffs
-
-When running a pipeline (plan → execute → QA → review):
-
-- Each agent reads the previous agent's artifact from disk — not from conversation history
-- Each agent writes its output to a named file in `outputs/pipeline/<slug>/`
-- No context is assumed to carry over between agent invocations
-- If an artifact is missing or unreadable, the agent stops and reports it — never guesses
-
-File naming convention for pipeline artifacts:
-```
-outputs/pipeline/<slug>/plan.md
-outputs/pipeline/<slug>/execute-summary.md
-outputs/pipeline/<slug>/qa-report.md
-outputs/pipeline/<slug>/review.md
-outputs/pipeline/<slug>/pipeline-report.md
-```
 
 ---
 

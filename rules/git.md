@@ -28,4 +28,29 @@
 - Description covers: what changed, why, and how to verify it
 - Link to the relevant issue or ticket if one exists
 - PRs should be reviewable in under 15 minutes — if they're longer, split them
- 
+
+## Worktrees
+
+- Use `git worktree add <path> <branch>` to work on multiple branches simultaneously without stashing
+- Name worktree paths clearly: `../project-feat-foo`, `../project-fix-bar` — keep them adjacent to the main clone
+- Remove worktrees when done: `git worktree remove <path>` then `git worktree prune`
+- Never share a worktree path between two active branches — each worktree is locked to one branch
+- Do not commit from a worktree to the branch that is checked out in the main clone simultaneously
+
+## Rebasing
+
+- Before rebasing, **ask the user which branch to rebase from** — projects vary (`main`, `master`, `develop`, `trunk`)
+- Prefer rebase over merge for keeping feature branches up to date: `git rebase <base-branch>`
+- Always rebase from the latest remote: `git fetch origin && git rebase origin/<base-branch>`
+- Interactive rebase (`git rebase -i`) to clean up commits before opening a PR — squash fixups, reword unclear messages
+- Never rebase a branch that others are working from — rebase only private/unshared branches
+- After a forced push following rebase, notify anyone who had the old branch checked out
+
+## Conflict resolution
+
+- Resolve conflicts at the rebase step, not in a merge commit — keeps history linear
+- For each conflicted file: understand both sides before choosing — do not blindly accept "ours" or "theirs"
+- After resolving, `git add <file>` then `git rebase --continue` — never `git commit` mid-rebase
+- If a conflict is unclear or the two sides represent different intentions, **stop and ask** before resolving
+- Run lint + typecheck + affected tests after resolving all conflicts — resolution can silently break logic
+- If a rebase goes wrong: `git rebase --abort` resets to the pre-rebase state cleanly — use it freely

@@ -205,21 +205,37 @@ install_harness_claude() {
 
 # -----------------------------------------------------------------------------
 # Claude Code — rules
-# Copies rules/*.md to $home_dir/rules/ and idempotently appends @-import lines
-# to $home_dir/CLAUDE.md so Claude Code auto-loads them on every session start.
+# 1. Installs claude/CLAUDE.md as $home_dir/CLAUDE.md (source of truth).
+#    Backs up an existing file only if it differs from the source.
+# 2. Copies rules/*.md to $home_dir/rules/.
+# 3. Idempotently appends @-import lines for any rule file not already
+#    referenced in CLAUDE.md (handles rules added after the initial install).
 # -----------------------------------------------------------------------------
 install_rules_claude() {
   local home_dir="$1"
   local rules_out="$home_dir/rules"
   local claude_md="$home_dir/CLAUDE.md"
+  local claude_md_src="$CLAUDE_CONFIG_DIR/CLAUDE.md"
+
+  header "CLAUDE.md  →  $claude_md"
+  if [[ ! -f "$claude_md_src" ]]; then
+    warn "  $claude_md_src not found — skipping CLAUDE.md install"
+  else
+    if [[ -f "$claude_md" ]] && ! cmp -s "$claude_md_src" "$claude_md"; then
+      cp "$claude_md" "$claude_md.bak"
+      info "  existing CLAUDE.md backed up to CLAUDE.md.bak"
+    fi
+    cp "$claude_md_src" "$claude_md"
+    success "  CLAUDE.md"
+  fi
 
   header "Rules  →  $rules_out"
   mkdir -p "$rules_out"
 
-  # Create CLAUDE.md if it does not exist yet.
+  # Ensure CLAUDE.md exists (may not if source was missing above).
   if [[ ! -f "$claude_md" ]]; then
     touch "$claude_md"
-    info "Created $claude_md"
+    info "  Created empty $claude_md"
   fi
 
   local rcount=0

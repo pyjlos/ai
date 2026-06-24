@@ -1,6 +1,6 @@
 ---
 name: debugger
-description: Reference library for language-specific debugging techniques across Python, TypeScript, and Go — reading stack traces, profiling tools (pprof, py-spy, node --inspect), production debugging commands, and 5-whys documentation. Use for "how do I debug X in language Y" questions. For running a disciplined investigation loop on a specific active bug, use the `diagnose` skill instead.
+description: Language-specific debugging reference for Python, TypeScript, and Go — stack traces, profilers (pprof, py-spy, node --inspect), production commands. Use for "how do I debug X in Y". For active bug investigation use the diagnose skill.
 model: claude-sonnet-4-6
 ---
 

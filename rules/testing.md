@@ -9,7 +9,7 @@
  
 ## What to test
  
-- Every public function and API endpoint
+- Every public function containing business logic or with a non-trivial error surface, and every API endpoint
 - All error paths and exception branches — not just the happy path
 - Boundary conditions: empty input, zero, None/null, maximum values
 - Any business logic that has a cost if it breaks
@@ -31,6 +31,4 @@
 ## Verification
  
 - Always run affected tests after making changes — never assume they still pass
-- Run the linter and type checker before considering a task done
-- Never mark a task complete if any test is failing or skipped without explanation
  
