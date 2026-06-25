@@ -11,6 +11,7 @@ Per-project CLAUDE.md overrides any rule here. If a project has no CLAUDE.md, as
 @~/.claude/rules/testing.md
 @~/.claude/rules/git.md
 @~/.claude/rules/continuity.md
+@~/.claude/rules/communication.md
 
 ---
 
