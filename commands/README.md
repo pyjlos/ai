@@ -22,17 +22,18 @@ Commands are installed to `~/.claude/commands/`. After installation, invoke any 
 
 ### `/review-pr`
 
-Orchestrates a parallel code review across three specialist agents and writes a structured report to disk.
+Orchestrates a parallel code review across four specialist agents and writes a structured report to disk.
 
 **What it does:**
 
 1. Accepts a branch name, file path, or git range as its argument
 2. Runs `git diff` if given a branch or range, or reads files directly if given a path
-3. Spawns three agents simultaneously against the same target:
+3. Spawns four agents simultaneously against the same target:
    - `pragmatic-reviewer` — complexity and bloat audit
    - `code-reviewer` — vulnerability, bug, and security audit
    - `test-engineer` — coverage and test quality audit
-4. Collates all three reviews into a single structured report
+   - `ponytail` — decision ladder enforcement; shortest working diff audit
+4. Collates all four reviews into a single structured report
 5. Writes the report to `outputs/reviews/review-YYYY-MM-DD-HH-MM.md`
 6. Prints a one-line summary to the terminal: the three verdicts and the number of action items
 
@@ -55,14 +56,14 @@ Orchestrates a parallel code review across three specialist agents and writes a 
 The written report includes:
 - A 2-3 sentence overall verdict
 - A table with each reviewer's verdict (e.g., `clean / low risk / gaps present`)
-- The full output from each of the three agents
+- The full output from each of the four agents
 - A numbered action item list ordered by severity — only blockers and high-value findings, no nitpicks
 
 The terminal output is intentionally brief:
 
 ```
 Review written to outputs/reviews/review-2026-04-04-14-32.md
-Verdicts: lean | low risk | well tested
+Verdicts: lean | low risk | well tested | minimal
 Action items: 2
 ```
 

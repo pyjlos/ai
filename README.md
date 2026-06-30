@@ -17,10 +17,9 @@ agents/          Specialist agent personas (22 agents across 5 categories)
   software-development/   Python, Go, TypeScript, Java, SQL, Bash
 
 commands/        Slash commands — multi-step workflows you invoke with /command-name
-  /pipeline      Plan → Execute → QA → Code Review pipeline
   /handoff       End a session cleanly, produce a resume artifact
   /resume        Pick up where you left off in a new session
-  /review-pr     Parallel code review (pragmatic + security + test coverage)
+  /review-pr     Parallel code review (pragmatic + security + test + ponytail)
 
 rules/           Behavioral constraints loaded into every Claude session
   workflow.md    Research → Plan → Execute → Review (mandatory phases)
@@ -96,7 +95,7 @@ See `agents/README.md` for the full catalog and prompting tips.
 
 Commands are multi-step workflows. Invoke them with `/command-name`.
 
-**`/review-pr <target>`** — parallel code review across three lenses
+**`/review-pr <target>`** — parallel code review across four lenses
 
 ```
 /review-pr main..HEAD
@@ -104,17 +103,7 @@ Commands are multi-step workflows. Invoke them with `/command-name`.
 /review-pr feature/auth
 ```
 
-Spawns pragmatic-reviewer, code-reviewer, and test-engineer in parallel. Writes a report to `outputs/reviews/`.
-
-**`/pipeline <task description>`** — full plan → execute → QA → review pipeline
-
-```
-/pipeline "add rate limiting to the orders API"
-/pipeline "build analytics dashboard with chart components"
-/pipeline "migrate user auth from sessions to JWT"
-```
-
-Each stage writes an artifact. Subsequent agents read from disk, not conversation history — so any stage can be re-run independently if it fails. Artifacts land in `outputs/pipeline/<task-slug>/`.
+Spawns pragmatic-reviewer, code-reviewer, test-engineer, and ponytail in parallel. Writes a report to `outputs/reviews/`.
 
 **`/handoff`** — end a session cleanly
 
@@ -131,45 +120,13 @@ Reads the latest handoff (or the one you specify), verifies current code state m
 
 ---
 
-## The pipeline workflow in practice
-
-The pipeline command is the main workflow for any task larger than a quick fix.
-
-**Example: building a dashboard**
-
-```
-/pipeline "build analytics dashboard with chart components and API integration"
-```
-
-1. **solution-architect** reads the codebase and writes a plan — specific files, components, and changes. If there are open questions, it stops and asks before anything is built.
-
-2. **executor** reads the plan and implements it. Writes an execute summary noting what's done, what's partial, and current test state.
-
-3. **test-engineer** reads the execute summary and runs QA. If verdict is FAIL, the pipeline stops — code review doesn't happen on broken work.
-
-4. **code-reviewer** reads the QA report and reviews the diff for bugs, security issues, and risk. Writes a verdict.
-
-Final `pipeline-report.md` surfaces action items in priority order.
-
-**Stopping mid-task:**
-
-```
-/handoff
-```
-
-**Resuming the next day:**
-
-```
-/resume
-```
-
 **The outputs directory**
 
 The `outputs/` directory is created automatically in whatever project you're working in — not in this repo. Add it to your project's `.gitignore` or commit it depending on whether you want a paper trail.
 
 ```gitignore
 outputs/handoffs/     # ephemeral, don't commit
-# outputs/pipeline/  # useful record — consider committing
+outputs/reviews/      # ephemeral, don't commit
 ```
 
 ---

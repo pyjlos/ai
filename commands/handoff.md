@@ -27,7 +27,17 @@ Before writing anything, answer these questions internally:
 
 ## Step 2 — Write the handoff document
 
-Write the handoff to `outputs/handoffs/handoff-YYYY-MM-DD-HH-MM.md`.
+First, resolve the git repository root:
+
+```
+git rev-parse --show-toplevel
+```
+
+If this fails (not inside a git repo), stop and tell the user:
+"Handoffs must be written inside a git repository. Navigate to your project directory first."
+
+Write the handoff to `<git-root>/outputs/handoffs/handoff-YYYY-MM-DD-HH-MM.md`.
+Never write to `/tmp`, `$HOME`, or any path outside the git repository root.
 
 Use this exact structure:
 

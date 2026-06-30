@@ -28,11 +28,12 @@ to get the changed files and lines. Pass the relevant file paths to each agent.
 
 ## Step 2 — Spawn reviewers in parallel
 
-Launch all three agents simultaneously against the same target:
+Launch all four agents simultaneously against the same target:
 
 - **pragmatic-reviewer** — complexity and bloat audit
 - **code-reviewer** — vulnerability, bug, and security exposure audit  
 - **test-engineer** — coverage and test quality audit
+- **ponytail** — decision ladder enforcement; shortest working diff audit
 
 Pass each agent the list of changed files so they focus only on what changed, not the entire codebase.
 
@@ -45,7 +46,7 @@ Once all three agents return, write a single file to `outputs/reviews/review-YYY
 ```markdown
 # Code review — <branch or file name>
 Date: <today>
-Reviewed by: pragmatic-reviewer, code-reviewer, test-engineer
+Reviewed by: pragmatic-reviewer, code-reviewer, test-engineer, ponytail
 
 ## Summary
 
@@ -59,6 +60,7 @@ If everything is clean, say so plainly.>
 | Pragmatic        | <lean / minor bloat / significant bloat / over-engineered> |
 | Code review      | <clean / low / medium / high risk> |
 | Tests            | <well tested / gaps present / significant gaps / untested> |
+| Ponytail         | <minimal / unnecessary additions / deletions possible / over-built> |
 
 ---
 
@@ -71,6 +73,10 @@ If everything is clean, say so plainly.>
 ---
 
 <paste the full ## Test review section from test-engineer>
+
+---
+
+<paste the full ## Ponytail review section from ponytail>
 
 ---
 

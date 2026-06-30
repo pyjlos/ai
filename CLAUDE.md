@@ -38,7 +38,7 @@ agents/             — agent persona files, grouped by domain
 skills/             — skills (SKILL.md per directory; siblings are bundled resources)
   agents/           — thin delegation wrappers that hand off to the same-named agent
   engineering/      — substantive skills with methodology and bundled .md resources
-  productivity/     — workflow / pipeline / handoff skills
+  productivity/     — workflow / handoff skills
 commands/           — slash commands (Claude Code)
 rules/              — global rules imported into ~/.claude/CLAUDE.md
 claude/
@@ -47,7 +47,7 @@ scripts/
   install.sh        — installer (Claude / Copilot / Kiro)
   statusline.sh     — Claude Code statusline (installed to ~/.claude/statusline.sh)
   hooks/            — PreToolUse hooks (installed to ~/.claude/hooks/)
-outputs/            — in-progress handoffs and pipeline artifacts
+outputs/            — in-progress handoffs and review artifacts
 ```
 
 ## Harness (Claude Code only)
