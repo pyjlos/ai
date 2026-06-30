@@ -36,7 +36,8 @@ git rev-parse --show-toplevel
 If this fails (not inside a git repo), stop and tell the user:
 "Handoffs must be written inside a git repository. Navigate to your project directory first."
 
-Write the handoff to `<git-root>/outputs/handoffs/handoff-YYYY-MM-DD-HH-MM.md`.
+Write the handoff to `<git-root>/outputs/handoffs/handoff-topic-YYYY-MM-DD-HH-MM.md`.
+Infer the topic from the contents of the directory.
 Never write to `/tmp`, `$HOME`, or any path outside the git repository root.
 
 Use this exact structure:
