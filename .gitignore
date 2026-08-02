@@ -9,3 +9,6 @@ outputs/pipeline/*/
 # Local overrides
 *.local.md
 .DS_Store
+
+# Personal agents — installed locally, never committed (may contain private financial/PII context)
+agents/personal/
