@@ -27,18 +27,14 @@ Before writing anything, answer these questions internally:
 
 ## Step 2 — Write the handoff document
 
-First, resolve the git repository root:
-
-```
-git rev-parse --show-toplevel
-```
-
-If this fails (not inside a git repo), stop and tell the user:
-"Handoffs must be written inside a git repository. Navigate to your project directory first."
-
-Write the handoff to `<git-root>/outputs/handoffs/handoff-topic-YYYY-MM-DD-HH-MM.md`.
+Default target is `<current-working-directory>/outputs/handoffs/handoff-topic-YYYY-MM-DD-HH-MM.md`.
 Infer the topic from the contents of the directory.
-Never write to `/tmp`, `$HOME`, or any path outside the git repository root.
+
+Before writing anything, confirm the target directory with the user: state the
+default path and ask if they want it written there or to a different directory
+they specify. Do not write until they confirm.
+
+Never write to `/tmp`, `$HOME`, or any path outside the confirmed target directory.
 
 Use this exact structure:
 

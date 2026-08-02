@@ -95,6 +95,16 @@ Enforces a disciplined approach to task execution: understand requirements befor
 
 ---
 
+### `determinism.md` — No hidden state, no writes outside the repo
+
+Disables automatic memory persistence (no writes to `~/.claude/projects/*/memory/` or `MEMORY.md` unless the user explicitly asks and confirms), forbids writing to `~/.claude/` during a session, and requires plans/docs/outputs to land inside the current repository rather than a global location. Also asks Claude to follow plans literally rather than improvising.
+
+**Why it matters:** Cross-session memory and global writes are useful defaults, but not for every user or every kind of data (e.g. personal finance details). This rule makes sessions stateless and repo-scoped when that's the priority.
+
+**Load when:** You want session behavior to be fully reproducible and repo-contained — e.g. for personal-data agents, or any project where global state would leak context between unrelated repos. This is in the global `CLAUDE.md` for this user.
+
+---
+
 ## Best practices for using rules
 
 **Always load security.md for production code.**
