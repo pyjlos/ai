@@ -7,6 +7,7 @@
   - Example: `fix(auth): handle expired token on refresh`
 - Subject line is imperative mood, 72 chars max — "add feature" not "added feature"
 - Commit one logical change at a time — don't bundle unrelated fixes
+- Stage only the files that belong to the change being made — never `git add -A` or `git add .` as a shortcut. Review `git status` before committing and exclude unrelated modified or untracked files
 - Never commit: `.env` files, secrets, build artefacts, `node_modules`, `__pycache__`, `.venv`
  
 ## Branches
@@ -28,6 +29,7 @@
 - Description covers: what changed, why, and how to verify it
 - Link to the relevant issue or ticket if one exists
 - PRs should be reviewable in under 15 minutes — if they're longer, split them
+- Any comment posted on a PR or issue (via `gh pr comment`, `gh issue comment`, review comments, etc.) must end with a line reading `Generated with Claude` so readers can tell it was authored by an agent
 
 ## Worktrees
 
