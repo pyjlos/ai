@@ -27,14 +27,24 @@ Before writing anything, answer these questions internally:
 
 ## Step 2 — Write the handoff document
 
-Default target is `<current-working-directory>/outputs/handoffs/handoff-topic-YYYY-MM-DD-HH-MM.md`.
-Infer the topic from the contents of the directory.
+Handoffs are grouped by feature. Ask the user which feature directory this
+handoff belongs to before writing anything — do not guess or infer it silently,
+even if a feature name seems obvious from the conversation. Propose a
+kebab-case name based on the session's work as a suggestion, but let the user
+confirm or override it.
 
-Before writing anything, confirm the target directory with the user: state the
-default path and ask if they want it written there or to a different directory
-they specify. Do not write until they confirm.
+Target path is:
 
-Never write to `/tmp`, `$HOME`, or any path outside the confirmed target directory.
+```
+<current-working-directory>/outputs/handoffs/<feature-name>/handoff-<slug>-YYYY-MM-DD-HH-MM.md
+```
+
+- `<feature-name>` — the feature directory confirmed with the user in this step.
+- `<slug>` — a short kebab-case slug describing this specific handoff (e.g. `jwt-refresh-fix`), derived from the one-line task description.
+
+Do not write until the user has confirmed the feature directory.
+
+Never write to `/tmp`, `$HOME`, or any path outside `outputs/handoffs/`.
 
 Use this exact structure:
 

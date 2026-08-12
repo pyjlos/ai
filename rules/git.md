@@ -48,6 +48,12 @@
 - Never rebase a branch that others are working from — rebase only private/unshared branches
 - After a forced push following rebase, notify anyone who had the old branch checked out
 
+## Cross-repo work
+
+- Before reading, comparing against, or reasoning about the state of another repository, pull its latest default branch first: `git -C <path> fetch origin && git -C <path> checkout main && git -C <path> pull origin main` (substitute the repo's actual default branch if not `main`)
+- Never treat a sibling or dependency repo's local checkout as ground truth without refreshing it first — stale local state leads to comparisons against code that no longer exists upstream
+- This applies whenever a task spans repos: shared libraries, API contracts, monorepo siblings, or any cross-repo scope noted in a project's `CLAUDE.md`
+
 ## Conflict resolution
 
 - Resolve conflicts at the rebase step, not in a merge commit — keeps history linear

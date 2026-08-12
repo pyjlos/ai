@@ -2,9 +2,9 @@ Resume a session from a handoff document. $ARGUMENTS is the path to the handoff 
 
 ## Guard
 
-If $ARGUMENTS is empty or was not provided, look for the most recent handoff file in `outputs/handoffs/`. If none exists, stop and respond:
+If $ARGUMENTS is empty or was not provided, look for the most recent handoff file across all feature subdirectories in `outputs/handoffs/**/handoff-*.md`. If more than one feature directory has a recent candidate, ask the user which feature to resume. If none exists, stop and respond:
 
-"No handoff file found. Either provide a path: `/resume outputs/handoffs/handoff-YYYY-MM-DD-HH-MM.md`, or start fresh and describe the task."
+"No handoff file found. Either provide a path: `/resume outputs/handoffs/<feature-name>/handoff-<slug>-YYYY-MM-DD-HH-MM.md`, or start fresh and describe the task."
 
 ---
 
