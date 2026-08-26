@@ -34,6 +34,7 @@ scripts/
 
 skills/          Reusable skill definitions (invocable via the skills system)
 templates/       Starter templates (CLAUDE.md, outputs structure, tasks)
+evals/           Eval harness template — clone into a project to verify agent outputs
 ```
 
 ---
