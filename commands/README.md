@@ -4,7 +4,7 @@ Slash commands are reusable, multi-step workflows you invoke by name in Claude C
 
 Commands live in `~/.claude/commands/` as markdown files. Each file defines what to do, in what order, and what to produce. You write the workflow once; you invoke it many times.
 
-**Commands vs. agents:** An agent is a specialist persona — it has a role, deep domain expertise, and consistent behavior. A command is a procedure — it orchestrates steps, calls agents, and produces a specific deliverable. The `review-pr` command spawns three agents in parallel; those agents do the expert work.
+**Commands vs. agents:** An agent is a specialist persona — it has a role, deep domain expertise, and consistent behavior. A command is a procedure — it orchestrates steps, calls agents, and produces a specific deliverable. The `review-pr` command spawns a core set of reviewer agents in parallel, plus domain specialists where the diff calls for them; those agents do the expert work.
 
 ---
 
@@ -22,54 +22,47 @@ Commands are installed to `~/.claude/commands/`. After installation, invoke any 
 
 ### `/review-pr`
 
-Orchestrates a parallel code review across four specialist agents and writes a structured report to disk.
+Reviews a GitHub PR against a local clone of the repo and writes a severity-bucketed report to disk.
 
 **What it does:**
 
-1. Accepts a branch name, file path, or git range as its argument
-2. Runs `git diff` if given a branch or range, or reads files directly if given a path
-3. Spawns four agents simultaneously against the same target:
-   - `pragmatic-reviewer` — complexity and bloat audit
-   - `code-reviewer` — vulnerability, bug, and security audit
-   - `test-engineer` — coverage and test quality audit
-   - `ponytail` — decision ladder enforcement; shortest working diff audit
-4. Collates all four reviews into a single structured report
-5. Writes the report to `outputs/reviews/review-YYYY-MM-DD-HH-MM.md`
-6. Prints a one-line summary to the terminal: the three verdicts and the number of action items
+1. Accepts a GitHub PR URL as its only argument (`https://github.com/<owner>/<repo>/pull/<number>`)
+2. Locates a local clone of the repo — checks the current directory's git remote first, then searches `~/repos/**`; if none is found, it stops and asks you to clone it or give it a path
+3. Pulls the PR's diff and changed-file list via `gh pr diff` / `gh pr view`
+4. Spawns reviewer agents in parallel, scoped to the changed files only:
+   - **Core, always run:** `pragmatic-reviewer` (complexity/bloat), `ponytail` (decision-ladder/shortest-diff), `code-reviewer` (security and vulnerability audit)
+   - **Domain specialists, added deterministically by path** — e.g. `terraform` for `*.tf`, `docker` for `Dockerfile*`, `kubernetes` for manifests, `api-designer` for routes/OpenAPI/proto, `typescript-agent` for `*.tsx`/components, `sql-agent` for migrations, `aws-expert` for AWS infra, `cicd-architect` for workflow files
+   - **Judgment pass:** for changed files none of the above rules cover, the orchestrator may add one more agent from the roster if the file content unambiguously belongs to that domain — it must log why in the report
+5. Merges all findings into one list and buckets each as Critical / High / Medium / Low
+6. Writes the report to `outputs/reviews/review-pr-<number>-YYYY-MM-DD-HH-MM.md`
+7. Prints a one-line summary to the terminal: which reviewers ran and the finding counts per severity
 
 **Usage:**
 
 ```
-/review-pr feature/auth
-```
-
-```
-/review-pr main..HEAD
-```
-
-```
-/review-pr src/api/payments.py
+/review-pr https://github.com/acme/widgets/pull/482
 ```
 
 **Output format:**
 
 The written report includes:
 - A 2-3 sentence overall verdict
-- A table with each reviewer's verdict (e.g., `clean / low risk / gaps present`)
-- The full output from each of the four agents
-- A numbered action item list ordered by severity — only blockers and high-value findings, no nitpicks
+- The list of reviewers that ran, including any domain specialist or judgment-pass addition and why
+- Findings grouped under `## Findings by severity` (Critical / High / Medium / Low)
+- A numbered action item list of Critical + High findings only
 
 The terminal output is intentionally brief:
 
 ```
-Review written to outputs/reviews/review-2026-04-04-14-32.md
-Verdicts: lean | low risk | well tested | minimal
-Action items: 2
+Review written to outputs/reviews/review-pr-482-2026-04-04-14-32.md
+Reviewers: pragmatic-reviewer, ponytail, code-reviewer, terraform (matched *.tf)
+Critical: 0, High: 2, Medium: 3, Low: 1
 ```
 
 **What the command does not do:**
 
-- It does not default to `main..HEAD` if you forget the argument — it stops and tells you to re-run with a target
+- It does not accept anything other than a PR URL — no branch names, file paths, or git ranges
+- It does not clone the repo for you — it asks first
 - It does not print the full report to the terminal — the report is in the file
 - It does not open a PR or push anything — it is read-only
 
@@ -78,7 +71,7 @@ Action items: 2
 ```
 outputs/
   reviews/
-    review-2026-04-04-14-32.md
+    review-pr-482-2026-04-04-14-32.md
 ```
 
 The `outputs/reviews/` directory is created automatically if it does not exist. You should add it to `.gitignore` unless you want to commit reviews to the repo.
@@ -87,17 +80,14 @@ The `outputs/reviews/` directory is created automatically if it does not exist. 
 
 ## Best practices for using commands
 
-**Always provide the target argument.**
-Commands are designed to be precise. `/review-pr` without an argument will stop and prompt you — this is intentional. Be explicit.
+**Always provide the PR URL.**
+Commands are designed to be precise. `/review-pr` without a PR link will stop and prompt you — this is intentional. Be explicit.
 
-**Use git ranges for PR reviews.**
-`/review-pr main..HEAD` reviews exactly what your branch changed relative to main. This is the most useful form for pre-merge review.
+**Make sure you have a local clone before running it.**
+The command looks for one automatically, but if it can't find it, it will ask you to clone or point it at a path rather than guessing.
 
-**Use file paths for targeted reviews.**
-`/review-pr src/api/auth.py` is useful when you have changed one file and want focused feedback without reviewing the entire diff.
-
-**Run `/review-pr` before opening a PR, not after.**
-The command is most valuable as a pre-merge gate, not a post-merge retrospective. Make it part of your PR preparation.
+**Run `/review-pr` once the PR is open, before merging.**
+The command needs `gh` to resolve the PR's diff and metadata, so it's a pre-merge gate rather than a local pre-push check.
 
 **Check the action items list, not just the verdicts.**
 Verdicts give you a quick signal; action items tell you what to actually fix. A "low risk" verdict with two action items still means two things to address.
