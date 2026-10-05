@@ -20,7 +20,13 @@ Before writing any code, stop at the first rung that holds:
 - Duplication is cheaper than the wrong abstraction — don't abstract until you see a third use case
 - Delete code before refactoring it; refactor before rewriting it
 - Prefer flat over nested; prefer simple over clever
-- Comments explain *why*, never *what*
+
+## Comments
+
+- Comments explain *why*, never *what* — well-named code already says what it does
+- Never reference ticket IDs, issue numbers, PR numbers, or sprint/project names in comments — they rot as trackers get archived or renamed; put that context in the commit message instead
+- Only add a comment when the reasoning is non-obvious: a hidden constraint, a workaround for a specific bug, a subtle invariant — if removing the comment wouldn't confuse a future reader, don't write it
+- No commented-out code, no restating the diff ("added X", "removed Y") in a comment
 
 ## What to avoid
 
