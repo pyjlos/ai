@@ -40,6 +40,24 @@ gh pr diff <number> --repo <owner>/<repo>
 ```
 Use the `files` list to scope the reviewers to changed files only — do not review the whole repo.
 
+## Step 3.5 — Create a shared review worktree
+
+Reviewers need the actual checked-out PR code, not just a diff, so they can open files, follow imports, and run tools. Create one worktree and point every spawned agent at it, rather than each agent cloning its own.
+
+1. Let `<repo-root>` be the located repo's top-level directory (`git rev-parse --show-toplevel`) and `<repo-name>` its directory name. The worktree path is `<repo-root>/../<repo-name>-pr-worktree` (a sibling of the source repo, not nested inside it).
+2. If that path already exists:
+   - If it's a git worktree registered to this repo (`git worktree list` shows it), reuse it — run `git fetch origin` inside it, then move to step 3.
+   - If it exists but isn't a registered worktree for this repo, stop and ask the user how to proceed (do not delete it yourself).
+3. Otherwise create it:
+   ```
+   git fetch origin pull/<number>/head:pr-<number>
+   git worktree add <repo-root>/../<repo-name>-pr-worktree pr-<number>
+   ```
+   If the local branch `pr-<number>` already exists, reuse it; if `git fetch` with that refspec fails, fall back to `gh pr checkout <number> --repo <owner>/<repo>` run inside a worktree created from `headRefName`.
+4. Confirm the worktree's `HEAD` matches the PR's `headRefName`/head commit before proceeding.
+
+Pass `<repo-root>/../<repo-name>-pr-worktree` as the working directory to every reviewer spawned in Step 4 — each agent reviews the real files there, scoped to the `files` list from Step 3, not the whole repo.
+
 ## Step 4 — Select reviewers
 
 **Core reviewers — always run, on every PR:**
@@ -67,7 +85,7 @@ A changed file can match more than one row — add every agent whose row matches
 
 After applying the table, look at any remaining changed files not matched by any row. If, and only if, one of them clearly falls in another specialist's domain from the agent roster (e.g. a `*.java` file with no row above → `java-agent`), add that agent too. Do not add an agent on a hunch — only when the file content unambiguously belongs to that domain. Record in the review file *why* each judgment-added agent was included (one line, e.g. "added `java-agent`: `BillingService.java` has no matching table row but is pure Java business logic").
 
-Pass every selected agent the PR diff and the list of changed files so they focus only on what changed.
+Pass every selected agent the review worktree path (from Step 3.5), the PR diff, and the list of changed files, so each agent reviews the real checked-out code but stays scoped to what changed.
 
 ## Step 5 — Categorize findings by severity
 
@@ -119,7 +137,16 @@ If everything is clean, say so plainly.>
 <Numbered list of Critical + High findings only, in order. If none, write "None — ready to merge.">
 ```
 
-## Step 7 — Report back
+## Step 7 — Clean up the worktree
+
+After all reviewers have finished and findings are written to the review file, remove the review worktree so it doesn't linger as stale state:
+```
+git worktree remove <repo-root>/../<repo-name>-pr-worktree
+git worktree prune
+```
+If the worktree has uncommitted changes (it shouldn't — reviewers should only read), stop and ask the user before removing it.
+
+## Step 8 — Report back
 
 Tell the user:
 - The path to the review file
