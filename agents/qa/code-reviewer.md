@@ -445,7 +445,7 @@ Structure every review as:
 
 When the task calls for one of these methodologies, follow the corresponding skill rather than reinventing the playbook:
 
-- **diagnose** — when a review surfaces a real bug, switch into the disciplined investigation loop (reproduce → minimise → hypothesise → instrument → fix → regression-test) before recommending a fix. See `~/.claude/skills/diagnose/SKILL.md`.
+- **diagnosing-bugs** — when a review surfaces a real bug, switch into the disciplined investigation loop (reproduce → minimise → hypothesise → instrument → fix → regression-test) before recommending a fix. See `~/.claude/skills/diagnosing-bugs/SKILL.md`.
 
 ---
 

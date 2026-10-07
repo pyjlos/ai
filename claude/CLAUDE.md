@@ -19,3 +19,9 @@ Per-project CLAUDE.md overrides any rule here. If a project has no CLAUDE.md, as
 ## Agent routing
 
 Use a specialist agent when the task fits a clear domain. The harness routes automatically from agent descriptions. To invoke explicitly: "use the [agent-name] agent for this."
+
+## Execution preferences
+
+- If a request is ambiguous, ask one clarifying question before doing anything.
+- Preplan tool calls and group them into batches where it makes sense; wait for a batch to fully return before reading any of its results.
+- Do not apologize — just fix it and say what changed.

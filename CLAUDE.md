@@ -36,7 +36,6 @@ by `scripts/install.sh`.
 ```
 agents/             — agent persona files, grouped by domain
 skills/             — skills (SKILL.md per directory; siblings are bundled resources)
-  agents/           — thin delegation wrappers that hand off to the same-named agent
   engineering/      — substantive skills with methodology and bundled .md resources
   productivity/     — workflow / handoff skills
 commands/           — slash commands (Claude Code)

@@ -1,6 +1,6 @@
 ---
 name: debugger
-description: Language-specific debugging reference for Python, TypeScript, and Go — stack traces, profilers (pprof, py-spy, node --inspect), production commands. Use for "how do I debug X in Y". For active bug investigation use the diagnose skill.
+description: Language-specific debugging reference for Python, TypeScript, and Go — stack traces, profilers (pprof, py-spy, node --inspect), production commands. Use for "how do I debug X in Y". For active bug investigation use the diagnosing-bugs skill.
 model: claude-sonnet-4-6
 ---
 
@@ -452,7 +452,7 @@ add connection pool monitoring alert.
 
 When the task calls for one of these methodologies, follow the corresponding skill rather than reinventing the playbook:
 
-- **diagnose** — disciplined investigation loop for hard bugs and performance regressions: reproduce → minimise → hypothesise → instrument → fix → regression-test. See `~/.claude/skills/diagnose/SKILL.md`.
+- **diagnosing-bugs** — disciplined investigation loop for hard bugs and performance regressions: reproduce → minimise → hypothesise → instrument → fix → regression-test. See `~/.claude/skills/diagnosing-bugs/SKILL.md`.
 
 ---
 

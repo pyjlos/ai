@@ -134,6 +134,23 @@ write_agent() {
   fi
 }
 
+# Remove any entry in $dir whose name is not in the newline-separated
+# $expected_list. Used after each install pass so skills/agents/rules/commands
+# removed from source don't linger forever in the installed copy.
+prune_dir() {
+  local dir="$1" expected_list="$2"
+  [[ -d "$dir" ]] || return 0
+  local entry name
+  for entry in "$dir"/*; do
+    [[ -e "$entry" ]] || continue
+    name=$(basename "$entry")
+    if ! printf '%s\n' "$expected_list" | grep -Fxq "$name"; then
+      rm -rf "$entry"
+      warn "  pruned stale: $name"
+    fi
+  done
+}
+
 # Copy a skill SKILL.md to dest, injecting `user-invocable: true` into the
 # frontmatter if it is not already present (required by Claude Code).
 write_claude_skill() {
@@ -239,9 +256,11 @@ install_rules_claude() {
   fi
 
   local rcount=0
+  local expected_rules=""
   while IFS= read -r -d '' f; do
     local rule_name
     rule_name=$(basename "$f")
+    expected_rules+="$rule_name"$'\n'
 
     # Copy the rule file.
     cp "$f" "$rules_out/$rule_name"
@@ -261,6 +280,7 @@ install_rules_claude() {
     rcount=$(( rcount + 1 ))
   done < <(find_rules)
   info "$rcount rules installed"
+  prune_dir "$rules_out" "$expected_rules"
 }
 
 # -----------------------------------------------------------------------------
@@ -276,36 +296,44 @@ install_claude() {
   mkdir -p "$agents_out"
 
   local count=0
+  local expected_agents=""
   while IFS= read -r -d '' f; do
     local name
     name=$(agent_name "$f")
+    expected_agents+="${name}.md"$'\n'
     write_agent "$f" "$agents_out/${name}.md" "$name"
     success "  $name"
     count=$(( count + 1 ))
   done < <(find_agents)
   info "$count agents installed"
+  prune_dir "$agents_out" "$expected_agents"
 
   header "Commands  →  $commands_out"
   mkdir -p "$commands_out"
 
   local ccount=0
+  local expected_commands=""
   while IFS= read -r -d '' f; do
     local cmd_name
     cmd_name=$(basename "$f")
+    expected_commands+="$cmd_name"$'\n'
     cp "$f" "$commands_out/$cmd_name"
     success "  ${cmd_name%.md}"
     ccount=$(( ccount + 1 ))
   done < <(find_commands)
   info "$ccount commands installed"
+  prune_dir "$commands_out" "$expected_commands"
 
   header "Skills  →  $skills_out"
   mkdir -p "$skills_out"
 
   local scount=0
+  local expected_skills=""
   while IFS= read -r -d '' f; do
     local skill_name skill_src_dir
     skill_src_dir="$(dirname "$f")"
     skill_name=$(basename "$skill_src_dir")
+    expected_skills+="$skill_name"$'\n'
     mkdir -p "$skills_out/$skill_name"
     write_claude_skill "$f" "$skills_out/$skill_name/SKILL.md"
     # Copy any bundled resource files (sibling .md files referenced by SKILL.md)
@@ -317,6 +345,7 @@ install_claude() {
     scount=$(( scount + 1 ))
   done < <(find_skills)
   info "$scount skills installed"
+  prune_dir "$skills_out" "$expected_skills"
 
   install_rules_claude "$home_dir"
   install_harness_claude "$home_dir"
@@ -340,52 +369,63 @@ install_copilot() {
   mkdir -p "$agents_out"
 
   local count=0
+  local expected_agents=""
   while IFS= read -r -d '' f; do
     local name
     name=$(agent_name "$f")
+    expected_agents+="${name}.md"$'\n'
     write_agent "$f" "$agents_out/${name}.md" "$name"
     success "  $name"
     count=$(( count + 1 ))
   done < <(find_agents)
   info "$count agents installed"
+  prune_dir "$agents_out" "$expected_agents"
 
   # Commands → .prompt.md files (surfaced as VS Code slash commands)
   header "Commands  →  $commands_out"
   mkdir -p "$commands_out"
 
   local ccount=0
+  local expected_commands=""
   while IFS= read -r -d '' f; do
     local stem
     stem=$(basename "$f" .md)
+    expected_commands+="${stem}.prompt.md"$'\n'
     cp "$f" "$commands_out/${stem}.prompt.md"
     success "  $stem"
     ccount=$(( ccount + 1 ))
   done < <(find_commands)
   info "$ccount commands installed (VS Code only — not supported in gh copilot CLI)"
+  prune_dir "$commands_out" "$expected_commands"
 
   # Rules → .instructions.md files (always-on at user scope, no frontmatter needed)
   header "Rules  →  $rules_out"
   mkdir -p "$rules_out"
 
   local rcount=0
+  local expected_rules=""
   while IFS= read -r -d '' f; do
     local stem
     stem=$(basename "$f" .md)
+    expected_rules+="${stem}.instructions.md"$'\n'
     cp "$f" "$rules_out/${stem}.instructions.md"
     success "  $stem"
     rcount=$(( rcount + 1 ))
   done < <(find_rules)
   info "$rcount rules installed"
+  prune_dir "$rules_out" "$expected_rules"
 
   # Skills → SKILL.md (open standard, same as Claude Code and Kiro)
   header "Skills  →  $skills_out"
   mkdir -p "$skills_out"
 
   local scount=0
+  local expected_skills=""
   while IFS= read -r -d '' f; do
     local skill_name skill_src_dir
     skill_src_dir="$(dirname "$f")"
     skill_name=$(basename "$skill_src_dir")
+    expected_skills+="$skill_name"$'\n'
     mkdir -p "$skills_out/$skill_name"
     cp "$f" "$skills_out/$skill_name/SKILL.md"
     find "$skill_src_dir" -maxdepth 1 -type f ! -name "SKILL.md" -print0 \
@@ -396,6 +436,7 @@ install_copilot() {
     scount=$(( scount + 1 ))
   done < <(find_skills)
   info "$scount skills installed"
+  prune_dir "$skills_out" "$expected_skills"
 }
 
 # -----------------------------------------------------------------------------
@@ -432,6 +473,7 @@ install_kiro() {
   mkdir -p "$agents_out"
 
   local count=0
+  local expected_agents=""
   while IFS= read -r -d '' f; do
     local name desc model desc_escaped
     name=$(agent_name "$f")
@@ -439,6 +481,7 @@ install_kiro() {
     model=$(frontmatter_field "$f" "model")
     [[ -z "$model" ]] && model="claude-sonnet-4-6"
     desc_escaped=$(json_escape "$desc")
+    expected_agents+="${name}.md"$'\n'"${name}.json"$'\n'
 
     # Markdown body
     write_agent "$f" "$agents_out/${name}.md" "$name"
@@ -458,30 +501,36 @@ JSON
     count=$(( count + 1 ))
   done < <(find_agents)
   info "$count agents installed (with JSON sidecars)"
+  prune_dir "$agents_out" "$expected_agents"
 
   # Rules → steering files with `inclusion: always`
   header "Rules  →  $rules_out"
   mkdir -p "$rules_out"
 
   local rcount=0
+  local expected_rules=""
   while IFS= read -r -d '' f; do
     local rule_name
     rule_name=$(basename "$f")
+    expected_rules+="$rule_name"$'\n'
     write_kiro_steering "$f" "$rules_out/$rule_name"
     success "  ${rule_name%.md}"
     rcount=$(( rcount + 1 ))
   done < <(find_rules)
   info "$rcount rules installed"
+  prune_dir "$rules_out" "$expected_rules"
   warn "Commands skipped — Kiro hooks are JSON and not compatible with markdown command files"
 
   header "Skills  →  $skills_out"
   mkdir -p "$skills_out"
 
   local scount=0
+  local expected_skills=""
   while IFS= read -r -d '' f; do
     local skill_name skill_src_dir
     skill_src_dir="$(dirname "$f")"
     skill_name=$(basename "$skill_src_dir")
+    expected_skills+="$skill_name"$'\n'
     mkdir -p "$skills_out/$skill_name"
     cp "$f" "$skills_out/$skill_name/SKILL.md"
     find "$skill_src_dir" -maxdepth 1 -type f ! -name "SKILL.md" -print0 \
@@ -492,6 +541,7 @@ JSON
     scount=$(( scount + 1 ))
   done < <(find_skills)
   info "$scount skills installed"
+  prune_dir "$skills_out" "$expected_skills"
 }
 
 # -----------------------------------------------------------------------------
