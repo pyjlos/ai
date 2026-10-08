@@ -19,7 +19,7 @@ agents/          Specialist agent personas (22 agents across 5 categories)
 commands/        Slash commands — multi-step workflows you invoke with /command-name
   /handoff       End a session cleanly, produce a resume artifact
   /resume        Pick up where you left off in a new session
-  /review-pr     Parallel code review (pragmatic + security + test + ponytail)
+  /review-pr     Parallel code review of a GitHub PR (pragmatic + security + ponytail)
 
 rules/           Behavioral constraints loaded into every Claude session
   workflow.md    Research → Plan → Execute → Review (mandatory phases)
@@ -96,25 +96,23 @@ See `agents/README.md` for the full catalog and prompting tips.
 
 Commands are multi-step workflows. Invoke them with `/command-name`.
 
-**`/review-pr <target>`** — parallel code review across four lenses
+**`/review-pr <github-pr-url>`** — parallel code review of an open GitHub PR
 
 ```
-/review-pr main..HEAD
-/review-pr src/api/payments.py
-/review-pr feature/auth
+/review-pr https://github.com/acme/widgets/pull/482
 ```
 
-Spawns pragmatic-reviewer, code-reviewer, test-engineer, and ponytail in parallel. Writes a report to `outputs/reviews/`.
+Spawns the `pragmatic-reviewer` and `code-reviewer` agents in parallel, applies the `ponytail` skill itself for a decision-ladder/shortest-diff pass, and adds domain-specialist agents by changed-file path. Writes a report to `outputs/reviews/`.
 
 **`/handoff`** — end a session cleanly
 
-Run this before closing Claude. Produces a handoff file in `outputs/handoffs/` capturing current phase, decisions made, what's done, what's next, and current test/lint state.
+Run this before closing Claude. Produces a handoff file in `outputs/handoffs/<feature-name>/` capturing current phase, decisions made, what's done, what's next, and current test/lint state.
 
 **`/resume [path]`** — pick up in a new session
 
 ```
 /resume
-/resume outputs/handoffs/handoff-2026-04-04-17-30.md
+/resume outputs/handoffs/jwt-refresh/handoff-jwt-refresh-fix-2026-04-04-17-30.md
 ```
 
 Reads the latest handoff (or the one you specify), verifies current code state matches, then continues from the exact next action — no re-explaining needed.

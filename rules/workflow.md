@@ -51,3 +51,14 @@ Before declaring the task done:
 - Verify new behaviour works end-to-end, not just in unit tests
 - If any test is failing or any known issue is unresolved, the task is not done — say so
 - If a task turns out significantly larger than expected, flag it before proceeding
+
+---
+
+## Long-running turns and mid-turn messages
+
+A conversational turn runs to completion before the next message is handled — a message sent while Claude is mid-turn queues, it does not interrupt or run concurrently. This is a property of the harness, not something a hook or setting in this repo can change.
+
+Two things are actually controllable:
+
+- **Keep turns short.** Delegate work that will take a while — a long build, a broad search, an independent sub-task — to a background subagent (e.g. a forked or spawned agent) instead of running it inline, so the main turn returns control promptly rather than blocking on it.
+- **Use interrupt, not a queued message, for anything urgent.** If a running turn needs to be redirected or stopped (wrong direction, new priority, a correction), interrupt it (e.g. Esc in the Claude Code CLI) rather than sending a follow-up message and waiting for it to queue behind the current turn.

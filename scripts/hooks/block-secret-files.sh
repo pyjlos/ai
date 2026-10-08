@@ -4,6 +4,11 @@
 # Reads tool input JSON from stdin, exits 2 with stderr message to block.
 set -euo pipefail
 
+if ! command -v jq >/dev/null 2>&1; then
+  echo "block-secret-files: jq not found on PATH; skipping this check." >&2
+  exit 0
+fi
+
 input=$(cat)
 file_path=$(printf '%s' "$input" | jq -r '.tool_input.file_path // .tool_input.notebook_path // empty')
 [[ -z "$file_path" ]] && exit 0

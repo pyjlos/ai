@@ -9,6 +9,11 @@ if [[ -n "${CLAUDE_ALLOW_HOME_EDITS:-}" ]]; then
   exit 0
 fi
 
+if ! command -v jq >/dev/null 2>&1; then
+  echo "block-claude-config-writes: jq not found on PATH; skipping this check." >&2
+  exit 0
+fi
+
 input=$(cat)
 file_path=$(printf '%s' "$input" | jq -r '.tool_input.file_path // .tool_input.notebook_path // empty')
 [[ -z "$file_path" ]] && exit 0

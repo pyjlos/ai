@@ -62,9 +62,10 @@ Pass `<repo-root>/../<repo-name>-pr-worktree` as the working directory to every 
 
 **Core reviewers — always run, on every PR:**
 
-- **pragmatic-reviewer** — complexity, bloat, and over-engineering audit
-- **ponytail** — decision ladder enforcement; shortest working diff audit
-- **code-reviewer** — security and vulnerability audit (injection, auth/authz gaps, secrets, unsafe deserialization, unvalidated input at trust boundaries)
+- **pragmatic-reviewer** agent — complexity, bloat, and over-engineering audit
+- **code-reviewer** agent — security and vulnerability audit (injection, auth/authz gaps, secrets, unsafe deserialization, unvalidated input at trust boundaries)
+
+Also apply the **ponytail** skill (`Skill` tool, not `Agent` — it lives under `skills/engineering/ponytail`, there is no `ponytail` agent) yourself as orchestrator for a decision-ladder/shortest-working-diff pass, and fold its findings into the same severity buckets as the spawned agents.
 
 **Domain specialists — added deterministically by path, based on the `files` list from Step 3:**
 

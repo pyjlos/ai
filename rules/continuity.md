@@ -57,7 +57,7 @@ Trust the handoff unless you find a contradiction in the files.
 ## Where handoffs are stored
 
 ```
-outputs/handoffs/handoff-YYYY-MM-DD-HH-MM.md   — session handoffs
+outputs/handoffs/<feature-name>/handoff-<slug>-YYYY-MM-DD-HH-MM.md   — session handoffs, grouped by feature
 ```
 
 The `outputs/` directory is the source of truth for in-progress work. When starting a new session on a task that has prior work, check `outputs/` before asking the user for context.

@@ -98,9 +98,11 @@ json_escape() {
     | tr -d '\r'
 }
 
-# Find all agent source files (exclude README.md), sorted.
+# Find all agent source files (exclude README.md), sorted. Scoped to
+# depth 2 (agents/<category>/<name>.md) so reference material that lives
+# deeper — e.g. agents/ai/reference/*.md — is never installed as an agent.
 find_agents() {
-  find "$AGENTS_DIR" -name "*.md" ! -name "README.md" -print0 | sort -z
+  find "$AGENTS_DIR" -maxdepth 2 -name "*.md" ! -name "README.md" -print0 | sort -z
 }
 
 # Find all command .md files (exclude README.md), sorted.

@@ -12,6 +12,8 @@ Agent instruction files for AI system design, prompt engineering, LLM architectu
 |---|---|---|
 | `ai-architect.md` | Principal AI Architect | Prompt engineering, model selection, multi-agent design, RAG, evals, safety, and the full Claude Code config surface (CLAUDE.md, settings.json, agents, hooks, skills, MCP) |
 
+`reference/` holds supporting pattern notes (multi-agent architecture, prompt engineering, RAG) for this agent to draw on — they are not agents themselves and are not installed by `scripts/install.sh`.
+
 ## Usage
 
 ```bash

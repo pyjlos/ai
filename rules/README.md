@@ -45,6 +45,16 @@ The `review-pr` command implicitly relies on the behaviors defined in these rule
 
 ## Rules reference
 
+### `collaboration.md` — Treat every session as a peer discussion
+
+Sets the working relationship: no unearned praise, no agreeing just to avoid friction, direct pushback on flawed logic or risky architecture, and explicit stopping conditions (ambiguous requirements, an architectural flaw found mid-implementation, a knowledge limit). Also bans placeholder comments and partial solutions delivered without saying so.
+
+**Why it matters:** An assistant that defers to every instruction without pushback produces confidently wrong work. This rule asks Claude to behave like a peer engineer who flags problems instead of working around them silently.
+
+**Load when:** Every session — this is a default-on tone and judgment rule, not a situational one.
+
+---
+
 ### `pragmatic.md` — Write the simplest code that works
 
 Enforces one principle: solve today's problem, not tomorrow's hypothetical one. Claude will avoid premature abstractions, unnecessary wrapper functions, single-implementation interfaces, and config flags for behavior that never changes. Comments must explain *why*, not *what*.
@@ -85,6 +95,16 @@ Enforces conventional commit format (`feat(scope): description`), imperative moo
 
 ---
 
+### `communication.md` — Maximize concision in status and findings
+
+Defines a terse reporting style for status updates, findings, and summaries: drop articles and filler verbs, use fragments over full sentences, lead lists with `:` instead of "The following X exist". Explicitly does not apply to code, plans, or pushback, which still need full clarity.
+
+**Why it matters:** Verbose status updates bury the one or two facts that matter. This rule keeps information-transfer responses skimmable without flattening the clarity of plans or code.
+
+**Load when:** Every session — it governs reporting style, not the substance of the work.
+
+---
+
 ### `workflow.md` — Plan before coding, stay focused, communicate blockers
 
 Enforces a disciplined approach to task execution: understand requirements before touching any file, write a plan for tasks over an hour, make the smallest change that solves the problem, run lint and typecheck incrementally, and never declare a task done if tests are failing. Also covers communication: stop and ask when requirements are ambiguous rather than guessing and reworking.
@@ -102,6 +122,16 @@ Disables automatic memory persistence (no writes to `~/.claude/projects/*/memory
 **Why it matters:** Cross-session memory and global writes are useful defaults, but not for every user or every kind of data (e.g. personal finance details). This rule makes sessions stateless and repo-scoped when that's the priority.
 
 **Load when:** You want session behavior to be fully reproducible and repo-contained — e.g. for personal-data agents, or any project where global state would leak context between unrelated repos. This is in the global `CLAUDE.md` for this user.
+
+---
+
+### `continuity.md` — Handoffs so context survives between sessions and agents
+
+Requires a handoff document (via `/handoff`) whenever a task ends incomplete, is passed to another agent, or crosses a workflow phase — and defines the seven things a handoff must answer (goal, phase, done/not-done, rationale, next action, codebase state, files to read first). Also defines how `/resume` should trust a handoff unless the files contradict it.
+
+**Why it matters:** Context lost between sessions is the most common cause of regressions in resumed work. This rule makes producing and trusting a handoff a required step, not an optional nicety.
+
+**Load when:** Ending a session with incomplete work, or handing work to another agent. Pairs directly with the `/handoff` and `/resume` commands.
 
 ---
 

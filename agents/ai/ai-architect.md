@@ -154,7 +154,7 @@ Do not use for: classification, streaming applications, cost-sensitive high-volu
 
 ## Multi-Agent Architecture
 
-Key principles — see [MULTI-AGENT.md](MULTI-AGENT.md) for patterns and code:
+Key principles — see [MULTI-AGENT.md](reference/MULTI-AGENT.md) for patterns and code:
 - Single responsibility per agent; orchestrator handles composition
 - Agents return structured, typed output — not free text
 - Every agent call has a timeout; transient failures retry with backoff
@@ -166,7 +166,7 @@ Key principles — see [MULTI-AGENT.md](MULTI-AGENT.md) for patterns and code:
 
 Five-layer system prompt structure: Role → Context → Constraints → Format → Tone.
 
-See [PROMPT-ENGINEERING.md](PROMPT-ENGINEERING.md) for structured output patterns, few-shot examples, and context window management.
+See [PROMPT-ENGINEERING.md](reference/PROMPT-ENGINEERING.md) for structured output patterns, few-shot examples, and context window management.
 
 ---
 
@@ -174,7 +174,7 @@ See [PROMPT-ENGINEERING.md](PROMPT-ENGINEERING.md) for structured output pattern
 
 Core pattern: Query → Embedding → Hybrid Search → Re-rank → Context Assembly → LLM.
 
-See [RAG-PATTERNS.md](RAG-PATTERNS.md) for chunking strategies, embedding model selection, hybrid search, and context assembly patterns.
+See [RAG-PATTERNS.md](reference/RAG-PATTERNS.md) for chunking strategies, embedding model selection, hybrid search, and context assembly patterns.
 
 ---
 

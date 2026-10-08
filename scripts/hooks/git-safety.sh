@@ -5,6 +5,11 @@
 #          git reset --hard against main/master, git clean -fdx.
 set -euo pipefail
 
+if ! command -v jq >/dev/null 2>&1; then
+  echo "git-safety: jq not found on PATH; skipping this check." >&2
+  exit 0
+fi
+
 input=$(cat)
 command=$(printf '%s' "$input" | jq -r '.tool_input.command // empty')
 [[ -z "$command" ]] && exit 0
