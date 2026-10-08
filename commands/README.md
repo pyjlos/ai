@@ -30,7 +30,8 @@ Reviews a GitHub PR against a local clone of the repo and writes a severity-buck
 2. Locates a local clone of the repo — checks the current directory's git remote first, then searches `~/repos/**`; if none is found, it stops and asks you to clone it or give it a path
 3. Pulls the PR's diff and changed-file list via `gh pr diff` / `gh pr view`
 4. Spawns reviewer agents in parallel, scoped to the changed files only:
-   - **Core, always run:** `pragmatic-reviewer` (complexity/bloat), `ponytail` (decision-ladder/shortest-diff), `code-reviewer` (security and vulnerability audit)
+   - **Core agents, always run:** `pragmatic-reviewer` (complexity/bloat), `code-reviewer` (security and vulnerability audit)
+   - **Core skill, always applied by the orchestrator:** `ponytail` (decision-ladder/shortest-diff) — a skill, not a spawnable agent
    - **Domain specialists, added deterministically by path** — e.g. `terraform` for `*.tf`, `docker` for `Dockerfile*`, `kubernetes` for manifests, `api-designer` for routes/OpenAPI/proto, `typescript-agent` for `*.tsx`/components, `sql-agent` for migrations, `aws-expert` for AWS infra, `cicd-architect` for workflow files
    - **Judgment pass:** for changed files none of the above rules cover, the orchestrator may add one more agent from the roster if the file content unambiguously belongs to that domain — it must log why in the report
 5. Merges all findings into one list and buckets each as Critical / High / Medium / Low
@@ -55,7 +56,7 @@ The terminal output is intentionally brief:
 
 ```
 Review written to outputs/reviews/review-pr-482-2026-04-04-14-32.md
-Reviewers: pragmatic-reviewer, ponytail, code-reviewer, terraform (matched *.tf)
+Reviewers: pragmatic-reviewer, code-reviewer, ponytail (skill), terraform (matched *.tf)
 Critical: 0, High: 2, Medium: 3, Low: 1
 ```
 

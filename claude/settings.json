@@ -64,14 +64,14 @@
       {
         "matcher": "Write|Edit|NotebookEdit",
         "hooks": [
-          { "type": "command", "command": "~/.claude/hooks/block-secret-files.sh" },
-          { "type": "command", "command": "~/.claude/hooks/block-claude-config-writes.sh" }
+          { "type": "command", "command": "~/.claude/hooks/block-secret-files.sh", "timeout": 5 },
+          { "type": "command", "command": "~/.claude/hooks/block-claude-config-writes.sh", "timeout": 5 }
         ]
       },
       {
         "matcher": "Bash",
         "hooks": [
-          { "type": "command", "command": "~/.claude/hooks/git-safety.sh" }
+          { "type": "command", "command": "~/.claude/hooks/git-safety.sh", "timeout": 5 }
         ]
       }
     ]

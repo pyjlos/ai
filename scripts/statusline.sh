@@ -4,6 +4,11 @@
 #   <cwd-tail>  ⎇ <branch>[*]  <model>
 set -euo pipefail
 
+if ! command -v jq >/dev/null 2>&1; then
+  printf 'claude (jq not found)'
+  exit 0
+fi
+
 input=$(cat)
 cwd=$(printf '%s' "$input" | jq -r '.workspace.current_dir // .cwd // empty')
 model=$(printf '%s' "$input" | jq -r '.model.display_name // .model.id // "claude"')
