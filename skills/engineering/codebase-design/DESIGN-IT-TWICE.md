@@ -42,3 +42,9 @@ Each sub-agent outputs:
 Present designs sequentially so the user can absorb each one, then compare them in prose. Contrast by **depth** (leverage at the interface), **locality** (where change concentrates), and **seam placement**.
 
 After comparing, give your own recommendation: which design you think is strongest and why. If elements from different designs would combine well, propose a hybrid. Be opinionated: the user wants a strong read, not a menu.
+
+### Optional: render the comparison as HTML
+
+The plain-text comparison in Step 3 is the default; most comparisons don't need more than that. Reach for an HTML rendering only when the designs are structurally different enough that prose/ascii undersells the difference — e.g. the seam placement or call shape differs so much that a side-by-side diagram would land faster than a paragraph.
+
+Reuse the scaffold in [`../improve-codebase-architecture/HTML-REPORT.md`](../improve-codebase-architecture/HTML-REPORT.md): a self-contained HTML file written to the OS temp dir (never committed), Tailwind CDN for layout, Mermaid CDN for graph-shaped diagrams, hand-built SVG for editorial visuals. Render the candidate designs as before/after-style cards side by side instead of duplicating that scaffold here.
