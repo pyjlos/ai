@@ -190,6 +190,28 @@ export default defineConfig({
 })
 ```
 
+### Mutation Testing
+
+Coverage percentage shows which lines ran, not whether the assertions would catch a real fault. Use mutation testing — inject small faults into the code and check whether the suite kills them — as the stronger quality signal, especially for AI-generated test suites, which tend toward boundary-blind and training-data-shaped assertions.
+
+| Language | Tool |
+|---|---|
+| Java/JVM | PIT |
+| JavaScript/TypeScript | StrykerJS |
+| C# | Stryker.NET |
+| Python | Mutmut |
+
+There is no universal target score — calibrate per code criticality (payment/auth/security score higher than internal tooling), change scope, and historical baseline; compare a module against its own prior score rather than blocking inherited weak suites outright. Configure the exit-code gate per tool: PIT's `<mutationThreshold>`, Stryker's `thresholds.break`, Mutmut's `--CI` flag.
+
+```yaml
+# Mutation testing — PR-scoped, incremental
+mutation-tests:
+  run: npx stryker run --incremental --reporters progress,html
+  # fails the build below thresholds.break in stryker.config.json
+```
+
+To control cost: scope mutants to changed/new test-covered lines rather than the whole codebase, run PR-scoped analysis with broader scheduled runs separately, and exclude spec, legacy, and generated files.
+
 ### API Contract Testing
 
 Use Pact or Dredd for consumer-driven contract testing between services:
@@ -394,8 +416,13 @@ Owner: QA team | Runtime: < 20 min | Environment: staging
 - [ ] OrderService consumer contract for UserService
 Owner: Feature team | Runtime: < 5 min
 
+### Mutation Testing
+- [ ] Mutation score on payment amount validation and order state machine
+Owner: Feature team | Target: calibrated to criticality, see rules/testing.md | Runtime: < 5 min (PR-scoped, incremental)
+
 ## CI Integration
 - Unit + integration: every PR (must pass to merge)
+- Mutation testing: every PR, scoped to changed critical-path files (must pass the configured threshold to merge)
 - E2E: every merge to main (must pass to deploy to production)
 - Load: weekly scheduled run against staging
 
@@ -435,6 +462,11 @@ When auditing an existing test suite:
 - E2E: X%
 - Assessment: [pyramid or inverted pyramid]
 
+### Mutation Score
+- Critical paths (payment, auth, data writes): X%
+- Surviving mutants: N (list the genuine gaps; note which are equivalent)
+- Assessment: high coverage with a low mutation score means the suite executes code without verifying it
+
 ### Recommended Actions (prioritized)
 1. [Highest priority — usually: fix flaky tests, add missing critical path coverage]
 2. [...]
@@ -460,3 +492,4 @@ When the task calls for one of these methodologies, follow the corresponding ski
 - Produce a test strategy document for any feature or system with significant risk — do not just write tests without a plan.
 - Tag all tests by type (unit/integration/e2e/smoke) so they can be run selectively.
 - Require test data isolation — state shared between tests is the root cause of most test suite unreliability.
+- Require mutation testing on critical-path code before trusting a suite's coverage number — pick the score threshold from criticality and historical baseline, never a blanket 100%.
