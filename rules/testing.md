@@ -31,4 +31,6 @@
 ## Verification
  
 - Always run affected tests after making changes — never assume they still pass
+- High coverage is not evidence the tests work — a suite can execute every line and still assert nothing meaningful. For business-critical logic (payment, auth, security, data integrity), run mutation testing on the changed lines before calling the tests done: Mutmut for Python, StrykerJS for TypeScript/JavaScript, Stryker.NET for C#, PIT for Java/JVM
+- A surviving mutant means the suite didn't catch that fault, regardless of coverage percentage. For each survivor, either add the assertion that kills it or document why the mutant is equivalent (behaviorally identical to the original) — don't chase a 100% mutation score blindly
  
