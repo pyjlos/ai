@@ -36,3 +36,7 @@ When the shape of that interface is itself in question (how deep the module is, 
 - **Red before green.** Write the failing test first, then only enough code to pass it. Don't anticipate future tests or add speculative features.
 - **One slice at a time.** One seam, one test, one minimal implementation per cycle.
 - **Refactoring is not part of the loop.** It belongs to the review stage (see the `code-review` skill), not the red → green implementation cycle.
+
+## Mutation check (critical paths)
+
+Green proves the test passes against the current implementation, not that it would fail against a wrong one. For payment, auth, security, or other business-critical logic, add a mutation check after green: run the mutation testing tool for the language (Mutmut for Python, StrykerJS for TypeScript/JavaScript) against the slice just written. A surviving mutant means the assertion just added wouldn't actually catch that fault — strengthen it before moving to the next slice, the same way a failing test would block you. Skip this step for non-critical slices; running it every cycle on everything isn't worth the cost.

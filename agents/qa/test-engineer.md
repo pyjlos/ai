@@ -543,6 +543,25 @@ Report coverage gaps as:
 - `validate_address()` — no test for international address formats
 ```
 
+## Mutation Analysis
+
+Coverage percentage only shows which lines ran, not whether the assertions would catch a real fault — AI-generated suites especially tend to reach high coverage with weak or boundary-blind assertions. On critical-path code, run mutation testing after coverage looks complete: `mutmut run` for Python, `stryker run` for TypeScript/JavaScript. A survivor is either a genuine assertion gap (strengthen the test) or an equivalent mutant (no observable behavior difference — note it and move on, don't write a test to force a kill).
+
+Report survivors the same way as coverage gaps:
+
+```
+## Mutation Survivors
+
+### CRITICAL (must fix)
+- `payment_service.py:42` — `amount > 0` mutated to `amount >= 0`; no test rejects a zero-amount charge
+
+### HIGH (should fix)
+- `order_service.ts:88` — boundary mutated from `<=` to `<`; off-by-one at the cancellation window not caught
+
+### EQUIVALENT (no action)
+- `order_service.py:103` — mutated log message string; no observable behavior change
+```
+
 ---
 
 ## Skills
@@ -562,4 +581,5 @@ When the task calls for one of these methodologies, follow the corresponding ski
 - Flag flaky tests immediately — a test that sometimes fails is a bug, not a known issue.
 - Integration tests reset state between runs — transaction rollback for SQL, cleanup hooks for queues and caches.
 - Mark tests that require external services (real DB, real API) so they can be excluded from fast local runs.
+- A high coverage percentage with surviving mutants on critical-path code means the tests execute the code without verifying it — treat surviving mutants as the real coverage gap, not the line/branch percentage.
 - Run `pytest --tb=short -q` or `vitest --reporter=verbose` and paste the output to verify tests pass before proposing them.
