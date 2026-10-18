@@ -1,0 +1,3 @@
+# Credits
+
+This skill reproduces Lauren Tan's [`maintain-verification-skill`](https://github.com/cursor/plugins/blob/main/pstack/skills/maintain-verification-skill/SKILL.md) skill from Cursor's `pstack` plugin, MIT-licensed. `maintain-verification-skill` does not depend on `pstack` as a plugin (it isn't part of this repo, and a hard dependency would break standalone installs), so the content is copied in and adapted rather than pointed at; this file is the attribution a dependency would otherwise have carried. The only change is the target path convention, from Cursor's `.cursor/skills/verify-*/` to this repo's `.claude/skills/verify-*/`, and the pointer to its paired generator skill, renamed to match this repo's unprefixed skill names.

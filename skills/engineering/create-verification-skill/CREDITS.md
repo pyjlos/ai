@@ -1,0 +1,3 @@
+# Credits
+
+This skill reproduces Lauren Tan's [`create-verification-skill`](https://github.com/cursor/plugins/blob/main/pstack/skills/create-verification-skill/SKILL.md) skill from Cursor's `pstack` plugin, MIT-licensed. `create-verification-skill` does not depend on `pstack` as a plugin (it isn't part of this repo, and a hard dependency would break standalone installs), so the content is copied in and adapted rather than pointed at; this file is the attribution a dependency would otherwise have carried. Paths were changed from Cursor's `.cursor/skills/` convention to this repo's `.claude/skills/` convention, and the pointer to the source's bundled `references/feature-map-example/` resource (not reproduced here) was replaced with an inline description of the same shape.

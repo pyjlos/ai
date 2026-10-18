@@ -1,0 +1,3 @@
+# Credits
+
+This skill reproduces Lauren Tan's [`benchmark-checklist`](https://github.com/cursor/plugins/blob/main/pstack/skills/benchmark-checklist/SKILL.md) skill from Cursor's `pstack` plugin, MIT-licensed. `benchmark-checklist` does not depend on `pstack` as a plugin (it isn't part of this repo, and a hard dependency would break standalone installs), so the content is copied in and adapted rather than pointed at; this file is the attribution a dependency would otherwise have carried. The source's "Other perf material" section, which pointed at `pstack`'s "Perf issue" and "Hillclimb" playbooks (not present in this repo), was dropped, and its one remaining cross-reference now points at this repo's own `pr` skill instead of `pstack`'s "Opening a PR" playbook.
