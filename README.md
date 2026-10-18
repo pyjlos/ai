@@ -147,6 +147,57 @@ See `rules/README.md` for what each rule enforces and when to load rules situati
 
 ---
 
+## Workflow: picking the right tool per phase
+
+`workflow.md` names the four phases; this maps each one to the specific agent or skill that fits it, so you're not guessing which tool to reach for mid-task.
+
+**Research / discovery** — before you touch code:
+
+```
+use the research skill to find out how the competitor's rate limiter works
+use the adr-research skill to compare Postgres logical replication vs Debezium for our CDC pipeline
+```
+
+`research` is for a factual question with a primary source; `adr-research` is for a system-design decision you'll need to write up and defend.
+
+**Planning before code** — for work too big to hold in one session, or a decision that needs locking down first:
+
+```
+use the wayfinder skill to map out the auth-rewrite effort before anyone starts building
+use the to-spec skill to turn this issue into a spec, then to-tickets to break it into tickets
+```
+
+**Implementation**:
+
+```
+use the tdd skill to build the retry logic test-first
+use the python-agent to refactor this service for type safety
+use the implement-spec skill to work through the tickets from to-tickets
+```
+
+Reach for `implement` / `implement-spec` when tickets or a spec already exist; reach for a language agent (`python-agent`, `go-agent`, `typescript-agent`, `java-agent`, `bash-agent`, `sql-agent`) when the work is scoped to one language and doesn't need a ticket trail; reach for `tdd` when you want the tests to drive the design.
+
+**Review before a PR**:
+
+```
+use the code-review skill to review this branch against main on both Standards and Spec
+use the interrogate skill to get adversarial parallel review on this diff before I open the PR
+use the pr skill to write the PR body
+```
+
+`code-review` is the default two-axis pass. Reach for `interrogate` instead when the change is risky or you don't trust a single pass — it spawns reviewers across distinct adversarial angles (correctness, security, simplicity, spec fidelity) and sorts findings into Act On / Consider / Noted / Dismissed. Use `pr` last, to write up what survived review.
+
+**Wrap-up**:
+
+```
+/handoff
+/resume outputs/handoffs/jwt-refresh/handoff-jwt-refresh-fix-2026-04-04-17-30.md
+```
+
+Run `/handoff` before closing a session with work left to do; run `/resume` to pick it back up without re-explaining context.
+
+---
+
 ## Adding your own agents, commands, or rules
 
 1. Create a `.md` file in the appropriate directory
