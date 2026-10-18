@@ -1,0 +1,3 @@
+# Credits
+
+This skill reproduces Lauren Tan's [`unslop`](https://github.com/cursor/plugins/blob/main/pstack/skills/unslop/SKILL.md) skill from Cursor's `pstack` plugin, MIT-licensed, word for word (the numbered pattern list is its own content, not something to paraphrase). `unslop` does not depend on `pstack` as a plugin (it isn't part of this repo, and a hard dependency would break standalone installs), so the content is copied in rather than pointed at; this file is the attribution a dependency would otherwise have carried. Filed under `skills/productivity/` rather than `skills/engineering/` because it edits prose and communication, not code, matching how this repo already files `caveman` and `teach` there.
