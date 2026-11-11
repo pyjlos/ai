@@ -27,3 +27,9 @@ Each entry: repo, what we draw from it, last-reviewed ref and date.
 - URL: https://github.com/humanlayer/skills/blob/main/plugins/show-me/skills/show-me/SKILL.md
 - Draws: skill content (the `pr` skill's Summary-section visuals come from here; see `skills/engineering/pr/CREDITS.md`)
 - Last reviewed: unknown — predates this tracked list; review on next pass to establish a ref and date
+
+## morluto/rea
+
+- URL: https://github.com/morluto/rea
+- Draws: skills (`.agents/skills/reverse-engineer-anything`; see `skills/engineering/reverse-engineer-anything/CREDITS.md`)
+- Last reviewed: `a6a2527ade0fb115358194e29a0538ec9af45846` (2026-11-11)
