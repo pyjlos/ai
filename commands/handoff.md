@@ -33,18 +33,21 @@ even if a feature name seems obvious from the conversation. Propose a
 kebab-case name based on the session's work as a suggestion, but let the user
 confirm or override it.
 
+Determine `<project-name>` first: run `git remote get-url origin` in the current working directory. If it resolves to a repo, use that repo's name (last path segment, without `.git`). If it does not, ask the user for a project name — do not guess it silently.
+
 Target path is:
 
 ```
-<current-working-directory>/outputs/handoffs/<feature-name>/handoff-<slug>-YYYY-MM-DD-HH-MM.md
+<current-working-directory>/outputs/<project-name>/handoffs/<feature-name>/handoff-<slug>-YYYY-MM-DD-HH-MM.md
 ```
 
+- `<project-name>` — the project this handoff is about, derived above.
 - `<feature-name>` — the feature directory confirmed with the user in this step.
 - `<slug>` — a short kebab-case slug describing this specific handoff (e.g. `jwt-refresh-fix`), derived from the one-line task description.
 
 Do not write until the user has confirmed the feature directory.
 
-Never write to `/tmp`, `$HOME`, or any path outside `outputs/handoffs/`.
+Never write to `/tmp`, `$HOME`, or any path outside `outputs/<project-name>/handoffs/`.
 
 Use this exact structure:
 
@@ -148,7 +151,7 @@ Order matters: list them in the order they should be read.>
 ## Step 3 — Report back
 
 Tell the user:
-- Path to the handoff file
+- Path to the handoff file (`outputs/<project-name>/handoffs/<feature-name>/handoff-<slug>-YYYY-MM-DD-HH-MM.md`)
 - Current status in one line (phase + what's done + immediate next action)
 - Any open questions that need human input before the next session starts
 

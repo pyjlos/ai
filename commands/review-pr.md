@@ -101,7 +101,7 @@ Drop findings that are pure style opinion with no actionable fix.
 
 ## Step 6 — Write the review file
 
-Write a single file to `outputs/reviews/review-pr-<number>-YYYY-MM-DD-HH-MM.md`:
+Write a single file to `outputs/<project-name>/reviews/review-pr-<number>-YYYY-MM-DD-HH-MM.md`, where `<project-name>` is `<repo>` from Step 1 (no re-derivation from the working directory's remote):
 
 ```markdown
 # Code review — PR #<number>: <PR title>
@@ -150,7 +150,7 @@ If the worktree has uncommitted changes (it shouldn't — reviewers should only 
 ## Step 8 — Report back
 
 Tell the user:
-- The path to the review file
+- The path to the review file (`outputs/<repo>/reviews/review-pr-<number>-YYYY-MM-DD-HH-MM.md`)
 - The PR reviewed (`owner/repo#number`)
 - Which reviewers ran beyond the core three, and why
 - Finding counts per severity (e.g. "Critical: 0, High: 2, Medium: 3, Low: 1")
