@@ -67,6 +67,8 @@ Pass `<repo-root>/../<repo-name>-pr-<number>-worktree` as the working directory 
 
 Also apply the **ponytail** skill (`Skill` tool, not `Agent` — it lives under `skills/engineering/ponytail`, there is no `ponytail` agent) yourself as orchestrator for a decision-ladder/shortest-working-diff pass, and fold its findings into the same severity buckets as the spawned agents.
 
+Also apply the **blast-radius** skill (`Skill` tool, not `Agent` — it lives under `skills/engineering/blast-radius`, has `disable-model-invocation: true`, and must be invoked explicitly by name, the same way as `ponytail` above) yourself as orchestrator for a hidden-assumption / implicit-state-machine pass. Feed it the PR diff, the changed-files list, the review worktree path, and the PR title and description fetched in Step 3 (`gh pr view`), so it has the stated intent to check the diff against, not just the raw diff. Fold its findings into the same severity buckets as the spawned agents': a proven, confirmed risk from its own "how sure are you" ladder is Critical or High depending on its real chance/cost per its own "Be honest about each risk" step; an unproven or merely plausible one is Medium or Low. Do not invent a fifth bucket for it.
+
 **Domain specialists — added deterministically by path, based on the `files` list from Step 3:**
 
 | Changed path matches | Add agent |
@@ -80,7 +82,7 @@ Also apply the **ponytail** skill (`Skill` tool, not `Agent` — it lives under 
 | `**/terraform/**`, `**/cloudformation/**`, AWS SDK imports | `aws-expert` |
 | `.github/workflows/**`, `**/ci/**` | `cicd-architect` |
 
-A changed file can match more than one row — add every agent whose row matches at least one changed file. If no row matches anything in the diff, skip this step; the core three are sufficient.
+A changed file can match more than one row — add every agent whose row matches at least one changed file. If no row matches anything in the diff, skip this step; the core reviewers are sufficient.
 
 **Judgment pass — for files the table above doesn't cover:**
 
@@ -117,7 +119,7 @@ If everything is clean, say so plainly.>
 
 ## Reviewers
 
-<list core reviewers, then domain specialists added and which path rule triggered each, then any judgment-added agent with its one-line justification. If none were added beyond the core three, say so.>
+<list core reviewers (including ponytail and blast-radius, which always run), then domain specialists added and which path rule triggered each, then any judgment-added agent with its one-line justification. If none were added beyond the core reviewers, say so.>
 
 ## Findings by severity
 
@@ -152,7 +154,7 @@ If the worktree has uncommitted changes (it shouldn't — reviewers should only 
 Tell the user:
 - The path to the review file
 - The PR reviewed (`owner/repo#number`)
-- Which reviewers ran beyond the core three, and why
+- Which reviewers ran beyond the core reviewers, and why
 - Finding counts per severity (e.g. "Critical: 0, High: 2, Medium: 3, Low: 1")
 
 Do not print the full review to the terminal — it's in the file.
