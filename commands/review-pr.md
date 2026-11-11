@@ -44,19 +44,19 @@ Use the `files` list to scope the reviewers to changed files only — do not rev
 
 Reviewers need the actual checked-out PR code, not just a diff, so they can open files, follow imports, and run tools. Create one worktree and point every spawned agent at it, rather than each agent cloning its own.
 
-1. Let `<repo-root>` be the located repo's top-level directory (`git rev-parse --show-toplevel`) and `<repo-name>` its directory name. The worktree path is `<repo-root>/../<repo-name>-pr-worktree` (a sibling of the source repo, not nested inside it).
+1. Let `<repo-root>` be the located repo's top-level directory (`git rev-parse --show-toplevel`) and `<repo-name>` its directory name. The worktree path is `<repo-root>/../<repo-name>-pr-<number>-worktree` (a sibling of the source repo, not nested inside it) — the PR number is part of the path so worktrees for different PRs can never collide or be silently reused for the wrong PR.
 2. If that path already exists:
-   - If it's a git worktree registered to this repo (`git worktree list` shows it), reuse it — run `git fetch origin` inside it, then move to step 3.
+   - If it's a git worktree registered to this repo (`git worktree list` shows it), reuse it — run `git fetch origin` inside it, then explicitly `git checkout pr-<number>` (creating it from the freshly fetched ref with `git checkout -b pr-<number> origin/pr-<number>`, or the equivalent fetched ref, if the local branch doesn't exist yet, matching step 3 below) before moving to step 4. Do not rely on `git fetch origin` alone to leave the worktree on the right branch.
    - If it exists but isn't a registered worktree for this repo, stop and ask the user how to proceed (do not delete it yourself).
 3. Otherwise create it:
    ```
    git fetch origin pull/<number>/head:pr-<number>
-   git worktree add <repo-root>/../<repo-name>-pr-worktree pr-<number>
+   git worktree add <repo-root>/../<repo-name>-pr-<number>-worktree pr-<number>
    ```
    If the local branch `pr-<number>` already exists, reuse it; if `git fetch` with that refspec fails, fall back to `gh pr checkout <number> --repo <owner>/<repo>` run inside a worktree created from `headRefName`.
-4. Confirm the worktree's `HEAD` matches the PR's `headRefName`/head commit before proceeding.
+4. Confirm the worktree's `HEAD` matches the PR's `headRefName`/head commit before proceeding. This check is now meaningful either way, since steps 2 and 3 both guarantee the worktree is on the right PR's branch before reaching it.
 
-Pass `<repo-root>/../<repo-name>-pr-worktree` as the working directory to every reviewer spawned in Step 4 — each agent reviews the real files there, scoped to the `files` list from Step 3, not the whole repo.
+Pass `<repo-root>/../<repo-name>-pr-<number>-worktree` as the working directory to every reviewer spawned in Step 4 — each agent reviews the real files there, scoped to the `files` list from Step 3, not the whole repo.
 
 ## Step 4 — Select reviewers
 
@@ -66,6 +66,8 @@ Pass `<repo-root>/../<repo-name>-pr-worktree` as the working directory to every 
 - **code-reviewer** agent — security and vulnerability audit (injection, auth/authz gaps, secrets, unsafe deserialization, unvalidated input at trust boundaries)
 
 Also apply the **ponytail** skill (`Skill` tool, not `Agent` — it lives under `skills/engineering/ponytail`, there is no `ponytail` agent) yourself as orchestrator for a decision-ladder/shortest-working-diff pass, and fold its findings into the same severity buckets as the spawned agents.
+
+Also apply the **blast-radius** skill (`Skill` tool, not `Agent` — it lives under `skills/engineering/blast-radius`, has `disable-model-invocation: true`, and must be invoked explicitly by name, the same way as `ponytail` above) yourself as orchestrator for a hidden-assumption / implicit-state-machine pass. Feed it the PR diff, the changed-files list, the review worktree path, and the PR title and description fetched in Step 3 (`gh pr view`), so it has the stated intent to check the diff against, not just the raw diff. Fold its findings into the same severity buckets as the spawned agents': a proven, confirmed risk from its own "how sure are you" ladder is Critical or High depending on its real chance/cost per its own "Be honest about each risk" step; an unproven or merely plausible one is Medium or Low. Do not invent a fifth bucket for it.
 
 **Domain specialists — added deterministically by path, based on the `files` list from Step 3:**
 
@@ -80,7 +82,7 @@ Also apply the **ponytail** skill (`Skill` tool, not `Agent` — it lives under 
 | `**/terraform/**`, `**/cloudformation/**`, AWS SDK imports | `aws-expert` |
 | `.github/workflows/**`, `**/ci/**` | `cicd-architect` |
 
-A changed file can match more than one row — add every agent whose row matches at least one changed file. If no row matches anything in the diff, skip this step; the core three are sufficient.
+A changed file can match more than one row — add every agent whose row matches at least one changed file. If no row matches anything in the diff, skip this step; the core reviewers are sufficient.
 
 **Judgment pass — for files the table above doesn't cover:**
 
@@ -117,7 +119,7 @@ If everything is clean, say so plainly.>
 
 ## Reviewers
 
-<list core reviewers, then domain specialists added and which path rule triggered each, then any judgment-added agent with its one-line justification. If none were added beyond the core three, say so.>
+<list core reviewers (including ponytail and blast-radius, which always run), then domain specialists added and which path rule triggered each, then any judgment-added agent with its one-line justification. If none were added beyond the core reviewers, say so.>
 
 ## Findings by severity
 
@@ -142,7 +144,7 @@ If everything is clean, say so plainly.>
 
 After all reviewers have finished and findings are written to the review file, remove the review worktree so it doesn't linger as stale state:
 ```
-git worktree remove <repo-root>/../<repo-name>-pr-worktree
+git worktree remove <repo-root>/../<repo-name>-pr-<number>-worktree
 git worktree prune
 ```
 If the worktree has uncommitted changes (it shouldn't — reviewers should only read), stop and ask the user before removing it.
@@ -152,7 +154,7 @@ If the worktree has uncommitted changes (it shouldn't — reviewers should only 
 Tell the user:
 - The path to the review file (`outputs/<repo>/reviews/review-pr-<number>-YYYY-MM-DD-HH-MM.md`)
 - The PR reviewed (`owner/repo#number`)
-- Which reviewers ran beyond the core three, and why
+- Which reviewers ran beyond the core reviewers, and why
 - Finding counts per severity (e.g. "Critical: 0, High: 2, Medium: 3, Low: 1")
 
 Do not print the full review to the terminal — it's in the file.
