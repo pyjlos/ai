@@ -44,19 +44,19 @@ Use the `files` list to scope the reviewers to changed files only — do not rev
 
 Reviewers need the actual checked-out PR code, not just a diff, so they can open files, follow imports, and run tools. Create one worktree and point every spawned agent at it, rather than each agent cloning its own.
 
-1. Let `<repo-root>` be the located repo's top-level directory (`git rev-parse --show-toplevel`) and `<repo-name>` its directory name. The worktree path is `<repo-root>/../<repo-name>-pr-worktree` (a sibling of the source repo, not nested inside it).
+1. Let `<repo-root>` be the located repo's top-level directory (`git rev-parse --show-toplevel`) and `<repo-name>` its directory name. The worktree path is `<repo-root>/../<repo-name>-pr-<number>-worktree` (a sibling of the source repo, not nested inside it) — the PR number is part of the path so worktrees for different PRs can never collide or be silently reused for the wrong PR.
 2. If that path already exists:
-   - If it's a git worktree registered to this repo (`git worktree list` shows it), reuse it — run `git fetch origin` inside it, then move to step 3.
+   - If it's a git worktree registered to this repo (`git worktree list` shows it), reuse it — run `git fetch origin` inside it, then explicitly `git checkout pr-<number>` (creating it from the freshly fetched ref with `git checkout -b pr-<number> origin/pr-<number>`, or the equivalent fetched ref, if the local branch doesn't exist yet, matching step 3 below) before moving to step 4. Do not rely on `git fetch origin` alone to leave the worktree on the right branch.
    - If it exists but isn't a registered worktree for this repo, stop and ask the user how to proceed (do not delete it yourself).
 3. Otherwise create it:
    ```
    git fetch origin pull/<number>/head:pr-<number>
-   git worktree add <repo-root>/../<repo-name>-pr-worktree pr-<number>
+   git worktree add <repo-root>/../<repo-name>-pr-<number>-worktree pr-<number>
    ```
    If the local branch `pr-<number>` already exists, reuse it; if `git fetch` with that refspec fails, fall back to `gh pr checkout <number> --repo <owner>/<repo>` run inside a worktree created from `headRefName`.
-4. Confirm the worktree's `HEAD` matches the PR's `headRefName`/head commit before proceeding.
+4. Confirm the worktree's `HEAD` matches the PR's `headRefName`/head commit before proceeding. This check is now meaningful either way, since steps 2 and 3 both guarantee the worktree is on the right PR's branch before reaching it.
 
-Pass `<repo-root>/../<repo-name>-pr-worktree` as the working directory to every reviewer spawned in Step 4 — each agent reviews the real files there, scoped to the `files` list from Step 3, not the whole repo.
+Pass `<repo-root>/../<repo-name>-pr-<number>-worktree` as the working directory to every reviewer spawned in Step 4 — each agent reviews the real files there, scoped to the `files` list from Step 3, not the whole repo.
 
 ## Step 4 — Select reviewers
 
@@ -142,7 +142,7 @@ If everything is clean, say so plainly.>
 
 After all reviewers have finished and findings are written to the review file, remove the review worktree so it doesn't linger as stale state:
 ```
-git worktree remove <repo-root>/../<repo-name>-pr-worktree
+git worktree remove <repo-root>/../<repo-name>-pr-<number>-worktree
 git worktree prune
 ```
 If the worktree has uncommitted changes (it shouldn't — reviewers should only read), stop and ask the user before removing it.
