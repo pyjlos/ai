@@ -140,6 +140,13 @@ If everything is clean, say so plainly.>
 <Numbered list of Critical + High findings only, in order. If none, write "None — ready to merge.">
 ```
 
+After writing the `.md` file, render a sibling HTML copy so the review is actually viewable in a browser, not just diffable:
+```
+scripts/render-report-html.sh --input outputs/<project-name>/reviews/review-pr-<number>-YYYY-MM-DD-HH-MM.md \
+  --title "Code review — PR #<number>: <PR title>" --project <owner>/<repo> --date <today>
+```
+The markdown file remains the canonical, diffable artifact; the `.html` is a generated sibling.
+
 ## Step 7 — Clean up the worktree
 
 After all reviewers have finished and findings are written to the review file, remove the review worktree so it doesn't linger as stale state:
@@ -153,6 +160,7 @@ If the worktree has uncommitted changes (it shouldn't — reviewers should only 
 
 Tell the user:
 - The path to the review file (`outputs/<repo>/reviews/review-pr-<number>-YYYY-MM-DD-HH-MM.md`)
+- The path to the rendered HTML sibling (same name, `.html`)
 - The PR reviewed (`owner/repo#number`)
 - Which reviewers ran beyond the core reviewers, and why
 - Finding counts per severity (e.g. "Critical: 0, High: 2, Medium: 3, Low: 1")
