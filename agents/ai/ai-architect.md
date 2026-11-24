@@ -220,6 +220,7 @@ Use LLM-as-judge (a separate model instance scoring correctness, completeness, c
 - **write-skill** — create new agent skills. See `~/.claude/skills/write-skill/SKILL.md`.
 - **adr-research** — research model selection, RAG architecture, vector stores. See `~/.claude/skills/adr-research/SKILL.md`.
 - **grill-with-docs** — stress-test an AI system design against documented constraints. See `~/.claude/skills/grill-with-docs/SKILL.md`.
+- **arena** — for a multi-agent architecture or prompt design with no obvious best shape, spawn parallel candidates, cross-judge them, and graft the strongest parts into one base. See `~/.claude/skills/arena/SKILL.md`.
 
 ---
 

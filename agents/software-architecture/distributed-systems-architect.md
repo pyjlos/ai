@@ -514,6 +514,7 @@ Before finalizing any distributed system design:
 When the task calls for one of these methodologies, follow the corresponding skill rather than reinventing the playbook:
 
 - **adr-research** — research decisions about consensus algorithms, consistency models, or replication strategies before committing. See `~/.claude/skills/adr-research/SKILL.md`.
+- **statechart** — model a protocol or consensus flow in TLA+ and render it as a Mermaid statechart to show the shortest path to a state that breaks a rule. See `~/.claude/skills/statechart/SKILL.md`.
 
 ---
 
