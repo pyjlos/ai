@@ -55,9 +55,9 @@ Each smell reads *what it is* → *how to fix*; match it against the diff:
 - **Middle Man**: a class or function that mostly just delegates onward. → cut it, call the real target direct.
 - **Refused Bequest**: a subclass or implementer that ignores or overrides most of what it inherits. → drop the inheritance, use composition.
 
-### 4. Spawn both sub-agents in parallel
+### 4. Spawn sub-agents in parallel
 
-Issue both sub-agent calls together, in the foreground, and aggregate the reports they return.
+Issue all sub-agent calls together, in the foreground, and aggregate the reports they return.
 
 **Standards sub-agent prompt** should include:
 
@@ -73,11 +73,18 @@ Issue both sub-agent calls together, in the foreground, and aggregate the report
 
 If the spec is missing, skip the Spec sub-agent and note this in the final report.
 
+**Comment-audit sub-agent prompt** should include:
+
+- The full diff command and commit list.
+- The brief: "Hunt comments, not code: comments that restate what the line below them already says, AI-tell comments (narrating the diff — 'added X', 'removed Y' — or explaining what rather than why), and claims that sound like a constraint but cite no reason. For each, say whether it should be deleted outright, or whether it states a genuinely non-obvious constraint that should be enforced instead of asserted in prose — and if so, name the cheapest enforcement (a type, a lint rule, a test) that would make violating it fail loudly. Cite file:line. Under 300 words."
+
 ### 5. Aggregate
 
-Present the two reports under `## Standards` and `## Spec` headings, verbatim or lightly cleaned. Do **not** merge or rerank findings, because the two axes are deliberately separate (see _Why two axes_).
+Present the reports under `## Standards`, `## Spec`, and `## Comments` headings, verbatim or lightly cleaned. Do **not** merge or rerank findings across Standards and Spec, because those two axes are deliberately separate (see _Why two axes_). Comments findings stand alone too: a comment issue isn't a Standards or Spec violation and shouldn't be folded into either.
 
-End with a one-line summary: total findings per axis, and the worst issue _within each axis_ (if any). Don't pick a single winner across axes: that's the reranking the separation exists to prevent.
+For Comments findings, present the accepted deletions and encoding proposals to the user before applying either — this sub-pass is the one part of the review that can change code, so nothing lands without approval.
+
+End with a one-line summary: total findings per axis plus the comment-audit count, and the worst issue _within each axis_ (if any). Don't pick a single winner across axes: that's the reranking the separation exists to prevent.
 
 ## Why two axes
 

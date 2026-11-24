@@ -258,6 +258,7 @@ When the task calls for one of these methodologies, follow the corresponding ski
 - **grill-with-docs** — stress-test a plan against the project's domain language and existing ADRs before committing to it. See `~/.claude/skills/grill-with-docs/SKILL.md`.
 - **improve-codebase-architecture** — find deepening opportunities and consolidation targets in an existing codebase. See `~/.claude/skills/improve-codebase-architecture/SKILL.md`.
 - **to-tickets** — break a plan or PRD into independently-grabbable tracer-bullet issues. See `~/.claude/skills/to-tickets/SKILL.md`.
+- **arena** — for a one-way-door design decision, spawn parallel candidate architectures, cross-judge them, and graft the strongest parts into one base instead of committing to the first shape. See `~/.claude/skills/arena/SKILL.md`.
 
 ---
 
