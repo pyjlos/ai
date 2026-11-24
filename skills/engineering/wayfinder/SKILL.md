@@ -79,6 +79,12 @@ Every ticket is either **HITL** (human in the loop, worked _with_ a human who sp
 - **Grilling** (HITL): Conversation. The default case. Always call the Skill tool twice, for "grilling" and "domain-modeling".
 - **Task** (HITL or AFK): Manual work that must happen before a _decision_ can be made: nothing to decide, prototype, or research, but the discussion is blocked until it's done. Signing up for a service so its API can be judged, provisioning access, moving data so its shape can be seen. This is the one type that _does_ rather than decides, and it earns its place by unblocking a decision, not by delivering the destination. The agent drives it alone where it can (AFK); otherwise it hands the human a precise checklist (HITL). Resolved when the work is done; the answer records what was done and any resulting facts (credentials location, new URLs, row counts) later tickets depend on.
 
+## Scale the rigor
+
+Resolving a ticket isn't uniform effort: match the rigor to what's actually at stake. A one-way door or a high-blast-radius decision earns more verification before it closes; a reversible, low-stakes ticket doesn't need the same ceremony. Rigor shows up as gates and artifacts, not as "think harder."
+
+For an AFK ticket (research, task) that involves exploration rather than a single lookup, work it as a hypothesis loop: state what you expect to find, make the smallest check that could tell you, verify against the real source — not a cached summary, not your own prior claim — and keep or discard the hypothesis based on what you actually saw. The map's Decisions-so-far is already the visible decision log for the route walked; record what the loop found there when you close the ticket, rather than keeping a second trail.
+
 ## Fog of war
 
 The map is _deliberately_ incomplete: don't chart what you can't yet see. Beyond the live tickets lies the **fog of war**: the dim view of decisions and investigations you can tell are coming but can't yet pin down, because they hang on questions still open. Resolving a ticket clears the fog ahead of it, graduating whatever's now specifiable into fresh tickets, one at a time, until the way to the destination is clear and no tickets remain.
